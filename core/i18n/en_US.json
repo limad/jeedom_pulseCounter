@@ -1,0 +1,77 @@
+{
+    "plugins\/pulseCounter\/plugin_info\/configuration.php": {
+        "Surface habitable du logement (m²)": "Living space of the accommodation (m²)"
+    },
+    "plugins\/pulseCounter\/desktop\/modal\/manualValue.php": {
+        "Valider": "Validate",
+        "Date de début": "Start date",
+        "Date de fin": "End date",
+        "Consommation (kWh)": "Consumption (kWh)",
+        "Coût (€)": "Cost (€)",
+        "Commentaire": "Comment",
+        "Mémo": "Memo",
+        "Gaz : 1m3 = 10.91 kWh": "Gas: 1m3 = 10.91 kWh",
+        "Ajout réussi": "Successful addition"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/panel.php": {
+        "401 - Accès non autorisé": "401 - Unauthorized access",
+        "Liste objets": "Object list",
+        "Rechercher": "Search"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/pulseCounter.php": {
+        "401 - Accès non autorisé": "401 - Unauthorized access",
+        "Gestion": "Management",
+        "Ajouter": "Add",
+        "Configuration": "Setup",
+        "Mes équipements de comptage": "My counting equipment",
+        "Rechercher": "Search",
+        "Configuration avancée": "Advanced configuration",
+        "Sauvegarder": "Save",
+        "Supprimer": "Delete",
+        "Equipement": "Equipment",
+        "Commandes": "Commands",
+        "Nom de l'équipement": "Name of equipment",
+        "Objet parent": "Parent object",
+        "Aucun": "None",
+        "Activer": "Activate",
+        "Visible": "Visible",
+        "Type": "Type",
+        "Electricité": "Electricity",
+        "Eau": "Water",
+        "Gaz": "Gas",
+        "Instantanné": "Snapshot",
+        "Consommation": "Consumption",
+        "Coût": "Cost",
+        "Température ext": "Outdoor temperature",
+        "Ajouter au total": "Add to total",
+        "Ceci est mon energie de chauffage": "This is my heating energy",
+        "Renseigner des valeurs": "Enter values",
+        "Renseigner": "Fill in",
+        "Nom": "Name",
+        "Action": "Action"
+    },
+    "plugins\/pulseCounter\/desktop\/js\/pulseCounter.js": {
+        "Nom": "Name",
+        "Tester": "Test",
+        "Valeur manuelle": "Manual value"
+    },
+    "plugins\/pulseCounter\/core\/ajax\/pulseCounter.ajax.php": {
+        "401 - Accès non autorisé": "401 - Unauthorized access",
+        "Equipement energie non trouvé : ": "Energy equipment not found:",
+        "Date de début invalide": "Invalid start date",
+        "Date de fin invalide": "Invalid end date",
+        "Aucune méthode correspondante à : ": "No method corresponding to:"
+    },
+    "plugins\/pulseCounter\/core\/class\/pulseCounter.class.php": {
+        "Période non trouvée : ": "Period not found:",
+        "Rafraichir": "Refresh",
+        "Consommation": "Consumption",
+        "Coût": "Cost",
+        "Instantanée": "Instant",
+        "Temperature extérieure": "Outside temperature",
+        "Performance énergetique": "Energetic performance"
+    },
+    "info.json": {
+        "Plugin pour le comptage de l’énergie (gaz, électricité et eau). Permet de faire un calcul estimatif du DPE.": "Plugin for energy metering (gas, electricity and water). Allows an estimated calculation of the DPE"
+    }
+}

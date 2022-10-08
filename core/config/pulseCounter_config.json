@@ -1,0 +1,944 @@
+{	
+  	"specials": {
+  		"commands": [
+            {
+                "logicalId": "pulse",
+                "name": "Impulsions",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "core::tile",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "0",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "0",
+                    "forceReturnLineBefore": "0",
+                    "forceReturnLineAfter": "0",
+                    "parameters": {
+                        "color": "green",
+                        "style": "color:red",
+                        "background_color": "blue"
+                    },
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "consumption",
+                "name": "Consommation",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showIconAndNamedashboard": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "performance_dju",
+                "name": "Performance énergetique",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "kWh/DJU",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "default",
+                    "mobile": "default"
+                },
+                "display": {
+                    "groupingType": "high::day",
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "1",
+                    "showIconAndNamedashboard": "0",
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "0",
+                "alert": []
+            },
+            {
+                "logicalId": "instant",
+                "name": "Instantanée",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "avg"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showIconAndNamedashboard": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "cost",
+                "name": "Coût",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "€",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "temperature_outdoor",
+                "name": "Temperature extérieure",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "°C",
+                "configuration": {
+                    "historizeMode": "avg"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "0",
+                    "showNameOnmobile": "1",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "value": "Température extérieure",
+                "isVisible": "1",
+                "alert": []
+            }
+        ]
+    },
+   	"commun": {
+  		"commands": [
+           	{
+                "logicalId": "basepulse",
+                "name": "Basic pulse",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "0",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "0",
+                    "forceReturnLineBefore": "0",
+                    "forceReturnLineAfter": "0",
+                    "parameters": {
+                        "color": "green",
+                        "style": "color:red",
+                        "background_color": "blue"
+                    },
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "pulse",
+                "name": "Impulsions",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "max"
+                },
+                "template": {
+                    "dashboard": "core::tile",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "0",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "0",
+                    "forceReturnLineBefore": "0",
+                    "forceReturnLineAfter": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_index",
+                "name": "Index_conso",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "kWh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "icon": "",
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_inst",
+                "name": "Conso Instantané",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "Wh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_heure",
+                "name": "Conso Horaire",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "Wh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_jour",
+                "name": "Conso Jour",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "Wh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_hier",
+                "name": "Conso Hier",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "Wh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_sem",
+                "name": "Conso Semaine",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "kWh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "conso_mois",
+                "name": "Conso Mois",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "kWh",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "refresh",
+                "name": "Rafraichir",
+                "type": "action",
+                "subType": "other",
+                "isHistorized": "0",
+                "template": {
+                    "dashboard": "default",
+                    "mobile": "default"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "1",
+                    "showIconAndNamedashboard": "0",
+                    "showIconAndNamemobile": "0"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "last_pulse",
+                "name": "Last pulse",
+                "type": "info",
+                "subType": "string",
+                "isHistorized": "1",
+                "template": {
+                    "dashboard": "default",
+                    "mobile": "default"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "1",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1",
+                    "parameters": []
+                },
+                "isVisible": "1",
+                "alert": []
+            }
+        ]
+    },
+    "gas": {
+        "category": {
+            "energy": 1
+        },
+        "display": {
+            "width": "238px",
+            "height": "352px"
+        },
+        "commands": [
+            {
+                "logicalId": "vol_index",
+                "name": "Index_vol",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "icon": "",
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_inst",
+                "name": "Volume Instantané",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_heure",
+                "name": "Volume Horaire",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_jour",
+                "name": "Volume Jour",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_hier",
+                "name": "Volume Hier",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+           	{
+                "logicalId": "vol_sem",
+                "name": "Volume Semaine",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_mois",
+                "name": "Volume Mois",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "debit",
+                "name": "Dernier debit",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l/h",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+          	{
+                "logicalId": "power",
+                "name": "Puissance_inst",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "W/h",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+          	{
+                "logicalId": "coef_conv",
+                "name": "Coef Conversion Gaz",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                   	"showIconAndNamedashboard": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            }
+        ]
+    },
+  	"electricity": {
+        "category": {
+            "energy": 1
+        },
+        "display": {
+            "backGraph::info": "0",
+            "width": "238px",
+            "height": "352px"
+        },
+        "commands": [
+            {
+                "logicalId": "power",
+                "name": "Puissance_inst",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "W/h",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            }
+        ]
+    },
+	"water": {
+        "category": {
+            "energy": 1
+        },
+        "display": {
+            "width": "238px",
+            "height": "352px"
+        },
+        "commands": [
+            {
+                "logicalId": "vol_index",
+                "name": "Index_vol",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "icon": "",
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_inst",
+                "name": "Volume Instantané",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_heure",
+                "name": "Volume Horaire",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_jour",
+                "name": "Volume Jour",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_hier",
+                "name": "Volume Hier",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "l",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+           	{
+                "logicalId": "vol_sem",
+                "name": "Volume Semaine",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "vol_mois",
+                "name": "Volume Mois",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "unite": "m³",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+            {
+                "logicalId": "debit",
+                "name": "Dernier debit",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": 1,
+                    "showNameOnmobile": 1,
+                    "showIconAndNamedashboard": 1,
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+          	{
+                "logicalId": "coef_conv",
+                "name": "Coef Conversion Gaz",
+                "type": "info",
+                "subType": "numeric",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "none"
+                },
+                "template": {
+                    "dashboard": "core::line",
+                    "mobile": "core::line"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                   	"showIconAndNamedashboard": "1",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1"
+                },
+                "isVisible": "1",
+                "alert": []
+            }
+        ]
+    }
+}

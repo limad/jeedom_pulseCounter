@@ -1,0 +1,33 @@
+{
+    "id": "pulseCounter",
+    "name": "Pulse Counter",
+    "description": {
+        "fr_FR": "Plugin pour le comptage des impulsions (gaz, électricité et eau). Permet de transformer des impulsions en donnés Energie.",
+        "en_US": "Plugin for pulse counting (gas, electricity and water). Allows you to transform impulses into energetic data"
+    },
+    "utilization": "Il faut disposer d'une commande Jeedom qui totalise les impulsions d'un compteur !",
+	"licence": "AGPL",
+    "author": "Limad44",
+    "require": "4.0",
+    "category": "energy",
+    "changelog": "https:\/\/doc.jeedom.com\/#language#\/plugins\/energy\/pulseCounter\/changelog",
+    "documentation": "https:\/\/doc.jeedom.com\/#language#\/plugins\/energy\/pulseCounter\/",
+    "changelog_beta": "https://limad.github.io/plugins-docs/plugin-pulseCounter/#language#/changelog",
+    "documentation_beta": "https://limad.github.io/plugins-docs/plugin-pulseCounter/#language#/",
+    "link": {
+		"forum": "https://community.jeedom.com/t/plugin-pulseCounter-documentation-et-actualites/"
+    },
+    "language": [
+        "fr_FR",
+        "en_US"
+    ],
+    "compatibility": [
+        "miniplus",
+        "smart",
+        "rpi",
+        "docker",
+        "diy",
+        "mobile",
+        "v4"
+    ]
+}
