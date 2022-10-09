@@ -956,37 +956,38 @@ class pulseCounter extends eqLogic {
       	$eqId = intval($this->getId());
         log::add(__CLASS__, 'debug',__FUNCTION__ . '  Starting ****************');
       	
-      	     
-		if($this->getConfiguration('pulse') != ''){
-            log::add(__CLASS__, 'debug', __FUNCTION__ . '  pulse cmd CONFIG Avalaible ... check listener');          
-          	$listener_function  = 'pulseEvent';
-            $pulse_listener = listener::byClassAndFunction('pulseCounter', $listener_function, array('pulseCounter_id' => $eqId));
-            if (!is_object($pulse_listener)) {
-              	log::add(__CLASS__, 'warning', __FUNCTION__ . '  creating pulse_listener... ');          
-          		$pulse_listener = new listener();
-            }
-            $pulse_listener->setClass('pulseCounter');
-            $pulse_listener->setFunction($listener_function);
-            $pulse_listener->setOption(array('pulseCounter_id' => $eqId));
-            $pulse_listener->emptyEvent();
-          	
-          
-            //preg_match_all("/#([0-9]*)#/", $this->getConfiguration('pulse'), $pulse_matches);
-			//preg_match('/#(?<cmds_id>[0-9]*)#/mi', $this->getConfiguration('pulse', $pulse_matches);
-			preg_match_all('/#(?<cmds_id>[0-9]*)#/mi', $this->getConfiguration('pulse'), $pulse_matches);      
-      		foreach ($pulse_matches['cmds_id'] as $cmd_id) {
+      	$pulseConfig = $this->getConfiguration('pulse','') ;    
+		if($pulseConfig != ''){
+            log::add(__CLASS__, 'debug', __FUNCTION__ . '  pulse cmd CONFIG Avalaible ... check listener');
+          	preg_match_all('/#(?<cmds_id>[0-9]*)#/mi', $this->getConfiguration('pulse'), $pulse_matches);      
+      		$target_cmd_id = null;
+            foreach ($pulse_matches['cmds_id'] as $cmd_id) {
                 $cmd = cmd::byId($cmd_id);
                     if (is_object($cmd)) {
-                        $pulse_listener->addEvent($cmd_id);
-                      	$pulse_target = '#' . $cmd_id . '#';
+                        $pulse_target = '#' . $cmd_id . '#';
+                      	$target_cmd_id = $cmd_id;
                       	//log::add(__CLASS__, 'warning', __FUNCTION__ . '  pulse_target cmd : '.$pulse_target);          
           				break;
                     }
             }
-          	$pulse_listener->save();
           	if(count($pulse_matches['cmds_id']) > 1){
               	//$this->setConfiguration('pulse', $pulse_target);
-                log::add(__CLASS__, 'error', __FUNCTION__ . '  Attention une seule commande <pulse> est possible choix : '.$cmd->getHumanName());
+                log::add(__CLASS__, 'warning', __FUNCTION__ . '  Attention une seule commande <pulse> est possible choix : '.$cmd->getHumanName());
+            }
+          
+          	if($target_cmd_id){
+                $listener_function  = 'pulseEvent';
+                $pulse_listener = listener::byClassAndFunction('pulseCounter', $listener_function, array('pulseCounter_id' => $eqId));
+                if (!is_object($pulse_listener)) {
+                    log::add(__CLASS__, 'debug', __FUNCTION__ . '  creating pulse_listener... ');          
+                    $pulse_listener = new listener();
+                }
+                $pulse_listener->setClass('pulseCounter');
+                $pulse_listener->setFunction($listener_function);
+                $pulse_listener->setOption(array('pulseCounter_id' => $eqId));
+                $pulse_listener->emptyEvent();
+              	$pulse_listener->addEvent($target_cmd_id);
+				$pulse_listener->save();
             }
           	$nbPulseBase_cmd = $this->getCmd('info', 'basepulse');
       		if (!is_object($nbPulseBase_cmd)){
@@ -1003,7 +1004,10 @@ class pulseCounter extends eqLogic {
             } 
               
         }
-		
+		else{
+          $err_msg = "Pas possible de sauvegarder l'équipement sans renseigner une commande 'Compteur impulsions'! c'est compris ?";
+          throw new Exception(__($err_msg, __FILE__));
+        }
       	
       	
     }
