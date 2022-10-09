@@ -379,48 +379,35 @@ class pulseCounter extends eqLogic {
           
             $cmdsData['vol_heure_last'] = round(($pulse_thishour - $pulse_lasthour) / $pulseRatio * 1000, 2);
           	$cmdsData['conso_heure_last'] = round($cmdsData['vol_heure_last'] * $coefConv, 2);
-          	$eqLogic->removeHistoryData('vol_heure', date('Y-m-d H:00:00', strtotime('-1 hour')), date('Y-m-d H:59:59', strtotime('-1 hour')));
-            $eqLogic->removeHistoryData('conso_heure', date('Y-m-d H:00:00', strtotime('-1 hour')), date('Y-m-d H:59:59', strtotime('-1 hour')));
-              
-              
-              
-              
-            if($pulse_thisday != ""){
+          	if($pulse_thisday != ""){
               	$cmdsData['vol_jour'] = round(($pulse_now - $pulse_thisday) / $pulseRatio * 1000, 2);
           		$cmdsData['conso_jour'] = round($cmdsData['vol_jour'] * $coefConv, 2);
           	}
-          
           	foreach($cmdsData as $cmdLogId => $cmd_value){
-                if ($cmdLogId === 'vol_heure_last') {
-                 	$cmd = $eqLogic->getCmd(null, 'vol_heure');
-                  	$target_valName = $cmdLogId."_last";
-					//$cmd_value = $$cmdLogId;
-                }elseif ($cmdLogId === 'conso_heure_last') {
-                  $cmd = $eqLogic->getCmd(null, 'conso_heure');
-                  //$cmd_value = $$cmdLogId;
-                  
-                }else{
-                  $cmd = $eqLogic->getCmd(null, $cmdLogId);
-                
+              	$valueDate="";
+                if ($cmdLogId == "vol_heure_last") {
+					$cmd = $eqLogic->getCmd(null, "vol_heure");
+                  	$valueDate = date('Y-m-d H:00:00', strtotime('-1 hour'));
+                    $eqLogic->removeHistoryData("vol_heure", date('Y-m-d H:00:00', strtotime('-1 hour')), date('Y-m-d H:59:59', strtotime('-1 hour')));
+					$target_valName = $cmdLogId."_last";
+				}elseif ($cmdLogId == "conso_heure_last") {
+					$cmd = $eqLogic->getCmd(null, "conso_heure");
+                  	$valueDate = date('Y-m-d H:00:00', strtotime('-1 hour'));
+                    $eqLogic->removeHistoryData("conso_heure", date('Y-m-d H:00:00', strtotime('-1 hour')), date('Y-m-d H:59:59', strtotime('-1 hour')));
+					$target_valName = $cmdLogId."_last";
+					$target_val = $$target_valName;
+                }else {
+                  	$cmd = $eqLogic->getCmd(null, $cmdLogId);
+                  	$valueDate = date('Y-m-d H:00:00');
                 }
-                  
-                if (!is_object($cmd) || $cmd_value === false  || $cmd_value < 0) {
-                  	//log::add(__CLASS__, 'debug','	'.__FUNCTION__ . '	continue '.$cmdLogId.' => '.$cmd_value);
-              		continue;
+              	if (!is_object($cmd) || $cmd_value === false  || $cmd_value < 0) {
+                    continue;
                 }
-              	
-              	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . '  set cmd:  '.$cmdLogId.' to '.$cmd_value);
-              	if ($cmdLogId === 'vol_heure_last') {
-                  	$eqLogic->checkAndUpdateCmd($cmd, $cmd_value, date('Y-m-d H:00:00', strtotime('-1 hour')) );
-                }elseif ($cmdLogId === 'conso_heure_last') {
-                  	$eqLogic->checkAndUpdateCmd($cmd, $cmd_value, date('Y-m-d H:00:00'), strtotime('-1 hour'));
-                }else{
-                  $cmd->event($cmd_value, date('Y-m-d H:00:00'));
-              	
-                }
-                //$eqLogic->checkAndUpdateCmd($cmdLogId, $cmd_value, date('Y-m-d H:00:00'));
-            }
-          	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . '  cmdValue '.json_encode($cmdsData));
+                log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd:  '.$cmdLogId.' to '.$cmd_value .' at: '.$valueDate);
+              	$cmd->event(round($cmd_value, 2), $valueDate);
+			
+			}
+			log::add(__CLASS__, 'debug','	'.__FUNCTION__ . '  cmdValue '.json_encode($cmdsData));
     	}
       	log::add(__CLASS__, 'debug',''.__FUNCTION__ . ' ['.$eqLogic->getName().'] end ');
             
@@ -482,8 +469,6 @@ class pulseCounter extends eqLogic {
           	$cmdsData['vol_sem'] = $pulse_week ? round(($pulse_now - $pulse_week) / $pulseRatio, 2): false;
           	$cmdsData['conso_sem'] = $pulse_week ? round($cmdsData['vol_sem'] * $coefConv, 2): false;
             
-          
-          	
           	$pulse_month = $eqLogic->getValueForPreviousDate('M', $cmdLogId);
           	if($pulse_month != ""){
               	$cmdsData['vol_mois'] = $pulse_month ? round(($pulse_now - $pulse_month) / $pulseRatio, 2): false;
@@ -498,23 +483,12 @@ class pulseCounter extends eqLogic {
                   	$valueDate = date('Y-m-d 00:00:00', strtotime('-1 days'));
                     $eqLogic->removeHistoryData("vol_jour", date('Y-m-d 00:00:00', strtotime('-1 days')), date('Y-m-d 23:59:59', strtotime('-1 days')));
 					$target_valName = $cmdLogId."_last";
-					//$target_val = $$target_valName;
-                  	//$cmd_value = $cmdsData['vol_hier'];;
-                    //log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd :  '.$cmdLogId.' to '.$cmd_value);
-                  	//$eqLogic->checkAndUpdateCmd($cmd, $cmd_value, date('Y-m-d 00:00:00', strtotime('-1 days')) );
-                  	 //$cmd->event(round($cmd_value, 2), $valueDate );
-                  	//continue;
-                }elseif ($cmdLogId == "conso_jour_last") {
+				}elseif ($cmdLogId == "conso_jour_last") {
 					$cmd = $eqLogic->getCmd(null, "conso_jour");
                   	$valueDate = date('Y-m-d 00:00:00', strtotime('-1 days'));
                     $eqLogic->removeHistoryData("conso_jour", date('Y-m-d 00:00:00', strtotime('-1 days')), date('Y-m-d 23:59:59', strtotime('-1 days')));
 					$target_valName = $cmdLogId."_last";
 					$target_val = $$target_valName;
-                  	//$cmd_value = $cmdsData['conso_hier'];;
-                    //log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd :  '.$cmdLogId.' to '.$cmd_value);
-                  	//$eqLogic->checkAndUpdateCmd($cmd, $cmd_value, date('Y-m-d 00:00:00', strtotime('-1 days')) );
-                  	 //$cmd->event(round($cmd_value, 2), $valueDate );
-                  	//continue;
                 }else {
                   	$cmd = $eqLogic->getCmd(null, $cmdLogId);
                   	$valueDate = date('Y-m-d 00:00:00');
@@ -524,10 +498,8 @@ class pulseCounter extends eqLogic {
                 }
                 log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd:  '.$cmdLogId.' to '.$cmd_value);
               	$cmd->event(round($cmd_value, 2), $valueDate );
-              	
             }
-          	
-    	}
+        }
     }
 
 /* ************************************************************************** */

@@ -25,12 +25,75 @@ try {
 	}
 	
 	ajax::init();
-	if (init('action') == 'SyncCmds') {
-		$pulseCounter = pulseCounter::byId(init('id'));
-      	if (!is_object($pulseCounter)) {
-			throw new Exception(__('Equipement energie non trouvé : ', __FILE__) . init('eqLogic_id'));
+  	if (init('action') == 'jsonToHist') {
+      	$cmd_id = init('cmd_id');
+      	$cmd = cmd::byId($cmd_id);
+      	
+        if (!is_object($cmd)) {
+            throw new Exception(__('Unknown cmd : '.$cmd_id, __FILE__) . init('cmd_id'));
+        }
+  		if (!$cmd->getIsHistorized()) {
+            throw new Exception(__("La commande cible $cmd_id n'est pas historisée", __FILE__) . init('cmd_id'));
+        }
+      	$targetSubType = $cmd->getSubType();
+      	$data = init('data');
+        $histories = json_decode($data, true);
+      	ksort($histories);
+      	if (!$histories || !is_array($histories)) {
+            throw new Exception(__("Le json des données est invalide $histories Impossible de lire les données", __FILE__) . init('cmd_id'));
+        }
+      	$now = strtotime('now');
+      	$c = 0;
+        foreach ($histories as $date => $value) {
+            $time = strtotime($date);
+            if( $now - $time > 315619200){
+                throw new Exception(__("Les données remontent à plus de dix ans, c'est trop pour moi !", __FILE__) . $date);
+            }
+            $cmd->event($value, date('Y-m-d H:i:s', $time));
+          	$c++;
+        }
+      	$msg = count($histories).'/'.$c;
+      	ajax::success($msg);
+    }
+    
+	if (init('action') == 'HistToJson') {
+		/*$eqLogic = pulseCounter::byId(init('id'));
+      	if (!is_object($eqLogic)) {
+			throw new Exception(__('Equipement pulseCounter non trouvé : ', __FILE__) . init('eqLogic_id'));
+		}*/
+      	$cmd_id = init('cmd_id');
+      	$cmd = cmd::byId($cmd_id);
+      	
+        if (!is_object($cmd)) {
+            log::add(__CLASS__, 'warning', __FUNCTION__ . '  unknown cmd : '.$cmd_id);
+          	throw new Exception(__('Unknown cmd : '.$cmd_id, __FILE__) . init('eqLogic_id'));
+        }
+  		if (!$cmd->getIsHistorized()) {
+            log::add(__CLASS__, 'warning', __FUNCTION__ . "  Cette commande $cmd_id n'est pas historisée");
+          	throw new Exception(__("  Cette commande $cmd_id n'est pas historisée", __FILE__) . init('eqLogic_id'));
+        }
+		$histories = $cmd->getHistory();
+  		if (!is_array($histories)) {
+			$histories = array($histories);
 		}
-      	$return = $pulseCounter->makeCmd();
+  		$return = [];
+  		foreach ($histories as $history) {
+          	$hist_time = $history->getDatetime();
+          	$hist_value = $history->getValue();
+          	if($hist_time && $hist_value){
+              	$return[$hist_time] = round($hist_value, 2);
+              	//echo "<br>$hist_time => $hist_value";
+            }
+        }
+      	ajax::success(json_encode($return, JSON_PRETTY_PRINT));
+	}
+  
+  	if (init('action') == 'SyncCmds') {
+		$eqLogic = pulseCounter::byId(init('id'));
+      	if (!is_object($eqLogic)) {
+			throw new Exception(__('Equipement pulseCounter non trouvé : ', __FILE__) . init('eqLogic_id'));
+		}
+      	$return = $eqLogic->makeCmd();
       	ajax::success($return);
 	}
   
@@ -51,16 +114,16 @@ try {
         }
       	$datas = json_decode(file_get_contents($configFile), true);
         if(!$datas) throw new Exception(__('Fichier de configuration inexploitable !', __FILE__));
-        $pulseCounter = pulseCounter::byId(init('eqLogic_id'));
-		if (!is_object($pulseCounter)) {
-			throw new Exception(__('Equipement energie non trouvé : ', __FILE__) . init('eqLogic_id'));
+        $eqLogic = pulseCounter::byId(init('eqLogic_id'));
+		if (!is_object($eqLogic)) {
+			throw new Exception(__('Equipement pulseCounter non trouvé : ', __FILE__) . init('eqLogic_id'));
 		}
 		foreach($datas as $values){
           	$start = strtotime($values['date_debut']);
             $end = strtotime($values['date_fin']);
-          	$cmd_conso = $pulseCounter->getCmd(null, 'conso_jour');
-          	$cmd_vol = $pulseCounter->getCmd(null, 'vol_jour');
-          	$cmd_coef = $pulseCounter->getCmd(null, 'coef_conv');
+          	$cmd_conso = $eqLogic->getCmd(null, 'conso_jour');
+          	$cmd_vol = $eqLogic->getCmd(null, 'vol_jour');
+          	$cmd_coef = $eqLogic->getCmd(null, 'coef_conv');
           
           	foreach($values as $cmdLogId => $value){
             	if ($cmdLogId != 'vol_jour' && $cmdLogId != 'conso_jour') continue;//
@@ -70,7 +133,7 @@ try {
           		if ($cmdLogId == 'vol_jour') $value = $value*1000;// to litre
               	if ($cmdLogId == 'conso_jour') $value = $value*1000;//to Wh
             	if ($value != '' && !is_nan($value)) {
-				$cmd = $pulseCounter->getCmd(null, $cmdLogId);
+				$cmd = $eqLogic->getCmd(null, $cmdLogId);
                 /*if (!is_object($cmd)) {
                     //log::add('pulseCounter', 'warning',__FUNCTION__ . ' Unknown cmd: '. $cmdLogId);
                   	continue;
@@ -95,7 +158,7 @@ try {
                 if (strtotime($cmd->getCollectDate()) < $end || strtotime($cmd->getCollectDate()) == strtotime('now')) {
                     $cmd->event($valueByDay, date('Y-m-d H:i:s', $end));
                 }
-                $pulseCounter->cleanData($cmdLogId);
+                $eqLogic->cleanData($cmdLogId);
             }
           }
         }
@@ -130,8 +193,8 @@ try {
   	if (init('action') == 'setHistlValue') {
       	log::add('pulseCounter', 'debug', 'Ajax::manualValue2 values: '. init('values').' -- dates: '. init('dates') );
 		
-      	$pulseCounter = pulseCounter::byId(init('eqLogic_id'));
-		if (!is_object($pulseCounter)) {
+      	$eqLogic = pulseCounter::byId(init('eqLogic_id'));
+		if (!is_object($eqLogic)) {
 			throw new Exception(__('Ajax::Equipement pulseCounter non trouvé : ', __FILE__) . init('eqLogic_id'));
 		}
 		$values = json_decode(init('values'), true);
@@ -147,7 +210,7 @@ try {
 		$duration = $end - $start;
       	foreach($values as $cmdLogId => $value){
           	if ($value != '' && !is_nan($value)) {
-				$cmd = $pulseCounter->getCmd(null, $cmdLogId);
+				$cmd = $eqLogic->getCmd(null, $cmdLogId);
                 if (!is_object($cmd)) {
                     log::add('pulseCounter', 'warning', 'Ajax::manualValue2 Unknown cmd: '. $cmdLogId );
                   	continue;
@@ -167,7 +230,7 @@ try {
                 if (strtotime($cmd->getCollectDate()) < $end || strtotime($cmd->getCollectDate()) == strtotime('now')) {
                     $cmd->event($valueByDay, date('Y-m-d H:i:s', $end));
                 }
-                $pulseCounter->cleanData($cmdLogId);
+                $eqLogic->cleanData($cmdLogId);
             }
         }
       
@@ -182,7 +245,7 @@ try {
 		if ($values['consumption'] != 0 && !is_nan($values['consumption'])) {
 			$consumptionByDay = round(($values['consumption'] / ($end - $start)) * 3600 * 24, 2);
 			$current = $start;
-			$consumption = $pulseCounter->getCmd(null, 'consumption');
+			$consumption = $eqLogic->getCmd(null, 'consumption');
 			while ($current <= $end) {
 				history::removes($consumption->getId(), date('Y-m-d H:i:s', $current), date('Y-m-d H:i:s', $current + 86399));
 				$consumption->addHistoryValue($consumptionByDay, date('Y-m-d H:i:s', $current));
@@ -192,12 +255,12 @@ try {
 			if (strtotime($consumption->getCollectDate()) < $end || strtotime($consumption->getCollectDate()) == strtotime('now')) {
 				$consumption->event($consumptionByDay, date('Y-m-d H:i:s', $end));
 			}
-			$pulseCounter->cleanData('consumption');
+			$eqLogic->cleanData('consumption');
 		}
 		if ($values['cost'] != 0 && !is_nan($values['cost'])) {
 			$costByDay = round(($values['cost'] / ($end - $start)) * 3600 * 24, 2);
 			$current = $start;
-			$cost = $pulseCounter->getCmd(null, 'cost');
+			$cost = $eqLogic->getCmd(null, 'cost');
 			while ($current <= $end) {
 				history::removes($cost->getId(), date('Y-m-d H:i:s', $current), date('Y-m-d H:i:s', $current + 86399));
 				$cost->addHistoryValue($costByDay, date('Y-m-d H:i:s', $current));
@@ -207,11 +270,11 @@ try {
 			if (strtotime($cost->getCollectDate()) < $end || strtotime($cost->getCollectDate()) == strtotime('now')) {
 				$cost->event($costByDay, date('Y-m-d H:i:s', $end));
 			}
-			$pulseCounter->cleanData('cost');
+			$eqLogic->cleanData('cost');
 		}
         */
-		$pulseCounter->setComment($values['comment']);
-		$pulseCounter->save();
+		$eqLogic->setComment($values['comment']);
+		$eqLogic->save();
 		ajax::success();
 	}
 	

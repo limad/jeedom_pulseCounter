@@ -187,19 +187,17 @@ if ($lastValueDate == false) {
         }
    		if (parseFloat($('#in_value').value()) !== '') {
 			$('#in_value').value(parseInt((parseFloat($('#in_value').value())+1)*1000)/1000)
-        	//$('#in_value').value(parseFloat($('#in_value').value()) - 1)
         	$('#in_value').trigger('change')
       	}
     })
 /////////////////////////////////////////////////
     $('#in_value').on('keyup',function(){
-		let indexVol_cible = parseFloat($('#in_value').value().replace("#unite#", "").replace(" ", "")).toFixed(2);
+		let indexVol_cible = parseFloat($('#in_value').value().replace("#unite#", "").replace(" ", "")).toFixed(3);
     	if (isNaN(indexVol_cible)){
-			//console.error("keyup:: La valeur saisie n'est pas un nombre : " + indexVol_cible);
 			$(this).value('');
 			return;
         }
-		$('#in_value').value(parseInt(($('#in_value').value()) * 1000)/1000);//(parseFloat($('#in_value').value()) - step).toFixed(3)
+		//$('#in_value').value(parseInt(($('#in_value').value()) * 1000)/1000);//(parseFloat($('#in_value').value()) - step).toFixed(3)
         $('#in_value').trigger('change')
     })
     
@@ -209,7 +207,7 @@ if ($lastValueDate == false) {
         clearTimeout(timerHandle)
       }
       timerHandle = setTimeout(function() {
-        var indexVol_cible = parseFloat($('#in_value').value().replace("#unite#", "").replace(" ", ""));
+        var indexVol_cible = parseFloat($('#in_value').value().replace("#unite#", "").replace(" ", "")).toFixed(3);
         	
         if (isNaN(indexVol_cible)){
 			console.error("change:: La valeur saisie n'est pas un nombre : " + indexVol_cible);
@@ -243,22 +241,15 @@ if ($lastValueDate == false) {
         $('#new_indexPulseAdd').value(new_indexPulseAdd);
       		$('#result').show();
         	$('#indexPulse_cible').value(indexPulse_cible);
-      		$('#indexVol_cible').value(indexVol_cible.toFixed(2));
+      		$('#indexVol_cible').value(indexVol_cible);
       		$('#basepulse_r').value(basepulse);
         	$('#bt_save_eq').removeClass('disabled');
         
         
-        	//$('#indexVol_cible').value($('#in_value').value().replace("#unite#", "").replace(" ", ""));
-        //jeedom.cmd.execute({id:'#id#', value: {slider: $('#in_value').value().replace("#unite#", "").replace(" ", "")}})
       }, 500)
     })
 	 
-    /*jeedom.cmd.addUpdateFunction('#id#',function(_options) {
-      $('#in_value').value(_options.display_value+' #unite#')
-    });
-    jeedom.cmd.refreshValue([{cmd_id :'#id#',display_value: '#state#', valueDate: '#valueDate#', collectDate: '#collectDate#', alertLevel: '#alertLevel#', unit: '#unite#'}])*/
-
-     
+         
 	$('#bt_save_eq').on('click',function(){
       	var indexVol_cible = $('#indexVol_cible').value();
     	var config = {
