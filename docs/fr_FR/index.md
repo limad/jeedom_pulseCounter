@@ -1,8 +1,8 @@
 # Plugin Comptage
 
-Ce plugin permet de transformer des données en provenance d'un compteur en donées énergetiques. 
+Ce plugin permet d'avoir un aperçu simple et rapide de ses dépenses énergetiques.
 
-Il gère le gaz, l'électricité et l'eau.
+Il gère l'eau, le gaz et l'électricité et vous fournira un graphique des postes  dépenses/consommations. Il vous donne aussi la tendance et les variations par rapport à la période précédente (vous pouvez avoir en période le jour, la semaine, le mois ou l'année).
 
 > **IMPORTANT**
 >
@@ -10,24 +10,17 @@ Il gère le gaz, l'électricité et l'eau.
 
 # Configuration
 
-La configuration du plugin nécessite une commande represantant l'evolution de votre compteur. Le plugin gére aussi bien les compteur totalisant ou compteur impulsionnel(dans ce cas le plugin incrémente l'index automatiquement).
+La configuration du plugin est très simple, il vous demandera juste la surface habitable (chauffé) de votre logement (pour le calcul de DPE).
 
 # Equipements
 
 Vous pouvez faire autant d'équipements de comptage que vous voulez :
 
 * **Type** :  Eau, Gaz ou Electricité.
-
-* **Type Comptage** :	Total( lorsque votre commande represent un index, type Linky, Gaspar...)
-						Impulsion( lorsque votre commande represent une impulsion) Dans ce cas le plugin augmente l'index de +1 à chaque changement de la commande d'origine, pour vue que sa valeur soit différente de 0.
-* **Compteur impulsions** : commande info donnant l'information de comptage.
-* **Type impulsion** : chisissez si le comtage détermine des Watts ou des litres (non utilisé pour l'instant).
-
-* **Poid par impulsion** : ce que represente une impulsion en W/kW ou l/m3* et le choix de son unité.
-							ex: 10 et unité (l) veut dire qu'une impulsion represente 10 litre.
-* **Coef de conversion** : Pour les équipements gaz c'est le coef d'équivalence 1m3 gaz vs 1kWh, si vous ne le conaissez pas mettez 10.91, pour les autres équipement mettre à 1. ce champ peut prendre une commande info si vous disposer de cette info dans un autre plugin...
-
-Une foie l'équipement renséigné et sauvegardé vous aurez des bouttons pour une configuration avancé;
-* **Corriger Vol_index** : permet de renseigner manuellement une valeur additionnelle pour que l'index de comptage de l'équipement corresponde à l'index réelle de votre compteur. Il Important de saisir cette valeur le plus tôt possible pour avoir un historique cohérant.
-
+* **Instantanné** : commande donnant la consommation instantanné (attention le plugin n'est pas capable de calculer la consommation journalière à partir de l'instantanné).
+* **Consommation** : commande donnant la consommation journalière *(doit revenir à 0 à 00h00)*.
+* **Coût** : commande donnant le coût journalier en € *(doit revenir à 0 à 00h00)*.
+* **Température extérieure** : commande donnant la température extérieure du logement. Permet d'optimiser les calculs de performance énergétique du logement.
+* **Ajouter au total** : indique d'ajouter au total de la consommation de ce type d'energie.
+* **Ceci est mon énergie de chauffage** : cocher la case pour effectuer le calcul de DPE sur cette énergie (à noter que si votre énergie de chauffage est le gaz, la consommation doit être en m3 pour les calculs de DPE).
 * **Renseigner des valeurs** : permet de renseigner manuellement sa consommation sur une période.
