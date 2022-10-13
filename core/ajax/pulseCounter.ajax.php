@@ -30,24 +30,30 @@ try {
       	$cmd = cmd::byId($cmd_id);
       	
         if (!is_object($cmd)) {
-            throw new Exception(__('Unknown cmd : '.$cmd_id, __FILE__) . init('cmd_id'));
+            throw new Exception(__("Unknown cmd : $cmd_id ", __FILE__) . init('cmd_id'));
         }
   		if (!$cmd->getIsHistorized()) {
-            throw new Exception(__("La commande cible $cmd_id n'est pas historisée", __FILE__) . init('cmd_id'));
+            throw new Exception(__("La commande cible $cmd_id n'est pas historisée ", __FILE__) . init('cmd_id'));
         }
       	$targetSubType = $cmd->getSubType();
       	$data = init('data');
         $histories = json_decode($data, true);
+      	log::add('pulseCounter', 'warning', __FUNCTION__ . "  histories: ".$histories);
       	ksort($histories);
       	if (!$histories || !is_array($histories)) {
-            throw new Exception(__("Le json des données est invalide $histories Impossible de lire les données", __FILE__) . init('cmd_id'));
+            throw new Exception(__("Le json des données est invalide $histories Impossible de lire les données ", __FILE__) . init('cmd_id'));
         }
+      	$firstDate = array_key_first($histories);
+      	$lastDate = array_key_last($histories);
+      	log::add('pulseCounter', 'warning', __FUNCTION__ . " import histories: from: ". date('Y-m-d H:i:s', strtotime($firstDate)) 
+                 . " to " .date('Y-m-d H:i:s', strtotime($lastDate)) );
+      	
       	$now = strtotime('now');
       	$c = 0;
         foreach ($histories as $date => $value) {
             $time = strtotime($date);
             if( $now - $time > 315619200){
-                throw new Exception(__("Les données remontent à plus de dix ans, c'est trop pour moi !", __FILE__) . $date);
+                throw new Exception(__("Les données remontent à plus de dix ans, c'est trop pour moi ! ", __FILE__) . $date);
             }
             $cmd->event($value, date('Y-m-d H:i:s', $time));
           	$c++;
@@ -65,11 +71,11 @@ try {
       	$cmd = cmd::byId($cmd_id);
       	
         if (!is_object($cmd)) {
-            log::add(__CLASS__, 'warning', __FUNCTION__ . '  unknown cmd : '.$cmd_id);
+            log::add('pulseCounter', 'warning', __FUNCTION__ . '  unknown cmd : '.$cmd_id);
           	throw new Exception(__('Unknown cmd : '.$cmd_id, __FILE__) . init('eqLogic_id'));
         }
   		if (!$cmd->getIsHistorized()) {
-            log::add(__CLASS__, 'warning', __FUNCTION__ . "  Cette commande $cmd_id n'est pas historisée");
+            log::add('pulseCounter', 'warning', __FUNCTION__ . "  Cette commande $cmd_id n'est pas historisée");
           	throw new Exception(__("  Cette commande $cmd_id n'est pas historisée", __FILE__) . init('eqLogic_id'));
         }
 		$histories = $cmd->getHistory();

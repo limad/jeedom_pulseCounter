@@ -1,0 +1,77 @@
+{
+    "plugins\/pulseCounter\/plugin_info\/configuration.php": {
+        "Surface habitable du logement (m²)": "Espacio habitable del alojamiento (m²)"
+    },
+    "plugins\/pulseCounter\/desktop\/modal\/manualValue.php": {
+        "Valider": "Validar",
+        "Date de début": "Fecha de inicio",
+        "Date de fin": "Fecha de fin",
+        "Consommation (kWh)": "Consumo (kWh)",
+        "Coût (€)": "Costo (€)",
+        "Commentaire": "Comentario",
+        "Mémo": "Memorando",
+        "Gaz : 1m3 = 10.91 kWh": "Gas: 1m3 = 10.91 kWh",
+        "Ajout réussi": "Adición exitosa"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/panel.php": {
+        "401 - Accès non autorisé": "401 - Acceso no autorizado",
+        "Liste objets": "Lista de objetos",
+        "Rechercher": "Buscar"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/pulseCounter.php": {
+        "401 - Accès non autorisé": "401 - Acceso no autorizado",
+        "Gestion": "Gestión",
+        "Ajouter": "Añadir",
+        "Configuration": "Configuración",
+        "Mes équipements de comptage": "Mi equipo de conteo",
+        "Rechercher": "Buscar",
+        "Configuration avancée": "Configuración avanzada",
+        "Sauvegarder": "Guardar",
+        "Supprimer": "Borrar",
+        "Equipement": "Dispositivos",
+        "Commandes": "Comandos",
+        "Nom de l'équipement": "Nombre del equipo",
+        "Objet parent": "Objeto padre",
+        "Aucun": "Ninguna",
+        "Activer": "Activar",
+        "Visible": "Visible",
+        "Type": "Tipo",
+        "Electricité": "Electricidad",
+        "Eau": "Agua",
+        "Gaz": "Gas",
+        "Instantanné": "Instantánea",
+        "Consommation": "El consumo",
+        "Coût": "Costo",
+        "Température ext": "Temperatura exterior",
+        "Ajouter au total": "Añadir al total",
+        "Ceci est mon energie de chauffage": "Esta es mi energía de calentamiento",
+        "Renseigner des valeurs": "Ingrese valores",
+        "Renseigner": "Rellenar",
+        "Nom": "Nombre",
+        "Action": "Acción"
+    },
+    "plugins\/pulseCounter\/desktop\/js\/pulseCounter.js": {
+        "Nom": "Nombre",
+        "Tester": "Probar",
+        "Valeur manuelle": "Valor manual"
+    },
+    "plugins\/pulseCounter\/core\/ajax\/pulseCounter.ajax.php": {
+        "401 - Accès non autorisé": "401 - Acceso no autorizado",
+        "Equipement energie non trouvé : ": "Equipo de energía no encontrado:",
+        "Date de début invalide": "Fecha de inicio no válida",
+        "Date de fin invalide": "Fecha de finalización no válida",
+        "Aucune méthode correspondante à : ": "Ningún método correspondiente a:"
+    },
+    "plugins\/pulseCounter\/core\/class\/pulseCounter.class.php": {
+        "Période non trouvée : ": "Período no encontrado:",
+        "Rafraichir": "Refrescar",
+        "Consommation": "El consumo",
+        "Coût": "Costo",
+        "Instantanée": "Instantánea",
+        "Temperature extérieure": "Temperatura exterior",
+        "Performance énergetique": "Rendimiento energético"
+    },
+    "info.json": {
+        "Plugin pour le comptage de l’énergie (gaz, électricité et eau). Permet de faire un calcul estimatif du DPE.": "Plugin para medición de energía (gas, electricidad y agua). Permite un cálculo estimado del DPE"
+    }
+}

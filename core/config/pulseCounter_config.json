@@ -2,8 +2,8 @@
   	"specials": {
   		"commands": [
             {
-                "logicalId": "pulse",
-                "name": "Impulsions",
+                "logicalId": "total_pulses",
+                "name": "Total_pulses",
                 "type": "info",
                 "subType": "numeric",
                 "isHistorized": "1",
@@ -11,7 +11,7 @@
                     "historizeMode": "max"
                 },
                 "template": {
-                    "dashboard": "core::tile",
+                    "dashboard": "core::line",
                     "mobile": "core::line"
                 },
                 "display": {
@@ -159,13 +159,13 @@
    	"commun": {
   		"commands": [
            	{
-                "logicalId": "basepulse",
-                "name": "Basic pulse",
+                "logicalId": "input_pulses",
+                "name": "Impulsions in",
                 "type": "info",
                 "subType": "numeric",
                 "isHistorized": "1",
                 "configuration": {
-                    "historizeMode": "max"
+                    "historizeMode": "none"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -190,16 +190,16 @@
                 "alert": []
             },
             {
-                "logicalId": "pulse",
-                "name": "Impulsions",
+                "logicalId": "total_pulses",
+                "name": "Totale impulsions",
                 "type": "info",
                 "subType": "numeric",
                 "isHistorized": "1",
                 "configuration": {
-                    "historizeMode": "max"
+                    "historizeMode": "none"
                 },
                 "template": {
-                    "dashboard": "core::tile",
+                    "dashboard": "core::line",
                     "mobile": "core::line"
                 },
                 "display": {
@@ -226,7 +226,7 @@
                     "historizeMode": "none"
                 },
                 "template": {
-                    "dashboard": "core::line",
+                    "dashboard": "core::badge",
                     "mobile": "core::line"
                 },
                 "display": {
@@ -248,7 +248,8 @@
                 "isHistorized": "1",
                 "unite": "Wh",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-7 days"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -273,7 +274,8 @@
                 "isHistorized": "1",
                 "unite": "Wh",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-1 month"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -321,7 +323,8 @@
                 "isHistorized": "1",
                 "unite": "Wh",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-7 days"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -345,7 +348,8 @@
                 "isHistorized": "1",
                 "unite": "kWh",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-3 month"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -386,6 +390,32 @@
                 "alert": []
             },
             {
+                "logicalId": "last_pulse",
+                "name": "Last pulse",
+                "type": "info",
+                "subType": "string",
+                "isHistorized": "1",
+                "configuration": {
+                    "historizeMode": "none",
+                  	"historyPurge": "-7 days"
+                },
+                "template": {
+                    "dashboard": "default",
+                    "mobile": "default"
+                },
+                "display": {
+                    "showNameOndashboard": "1",
+                    "showNameOnmobile": "1",
+                    "showIconAndNamedashboard": "1",
+                    "showIconAndNamemobile": "0",
+                    "showStatsOndashboard": "1",
+                    "showStatsOnmobile": "1",
+                    "parameters": []
+                },
+                "isVisible": "1",
+                "alert": []
+            },
+          	{
                 "logicalId": "refresh",
                 "name": "Rafraichir",
                 "type": "action",
@@ -405,11 +435,11 @@
                 "alert": []
             },
             {
-                "logicalId": "last_pulse",
-                "name": "Last pulse",
-                "type": "info",
-                "subType": "string",
-                "isHistorized": "1",
+                "logicalId": "test_pulse",
+                "name": "test_pulse(log)",
+                "type": "action",
+                "subType": "other",
+                "isHistorized": "0",
                 "template": {
                     "dashboard": "default",
                     "mobile": "default"
@@ -417,14 +447,10 @@
                 "display": {
                     "showNameOndashboard": "1",
                     "showNameOnmobile": "1",
-                    "showIconAndNamedashboard": "1",
-                    "showIconAndNamemobile": "0",
-                    "showStatsOndashboard": "1",
-                    "showStatsOnmobile": "1",
-                    "parameters": []
+                    "showIconAndNamedashboard": "0",
+                    "showIconAndNamemobile": "0"
                 },
-                "isVisible": "1",
-                "alert": []
+                "isVisible": "1"
             }
         ]
     },
@@ -470,7 +496,8 @@
                 "isHistorized": "1",
                 "unite": "l",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-7 days"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -495,7 +522,8 @@
                 "isHistorized": "1",
                 "unite": "l",
                 "configuration": {
-                    "historizeMode": "none"
+                    "historizeMode": "none",
+                  	"historyPurge": "-7 days"
                 },
                 "template": {
                     "dashboard": "core::line",
@@ -643,7 +671,9 @@
                 },
                 "template": {
                     "dashboard": "core::line",
-                    "mobile": "core::line"
+                    "mobile": "core::line",
+                  	"groupingType": "average::hour",
+                  	"graphType": "column"
                 },
                 "display": {
                     "showNameOndashboard": 1,
@@ -708,7 +738,9 @@
                     "showNameOnmobile": 1,
                     "showIconAndNamedashboard": 1,
                     "showStatsOndashboard": "1",
-                    "showStatsOnmobile": "1"
+                    "showStatsOnmobile": "1",
+                  	"groupingType": "average::hour",
+                  	"graphType": "column"
                 },
                 "isVisible": "1",
                 "alert": []
@@ -769,7 +801,9 @@
                     "showIconAndNamedashboard": 1,
                     "showIconAndNamemobile": "0",
                     "showStatsOndashboard": "1",
-                    "showStatsOnmobile": "1"
+                    "showStatsOnmobile": "1",
+                  	"groupingType": "sum::hour",
+                  	"graphType": "column"
                 },
                 "isVisible": "1",
                 "alert": []
@@ -912,7 +946,9 @@
                     "showNameOnmobile": 1,
                     "showIconAndNamedashboard": 1,
                     "showStatsOndashboard": "1",
-                    "showStatsOnmobile": "1"
+                    "showStatsOnmobile": "1",
+                  	"groupingType": "average::hour",
+                  	"graphType": "column"
                 },
                 "isVisible": "1",
                 "alert": []

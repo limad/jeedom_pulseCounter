@@ -1,0 +1,77 @@
+{
+    "plugins\/pulseCounter\/plugin_info\/configuration.php": {
+        "Surface habitable du logement (m²)": ""
+    },
+    "plugins\/pulseCounter\/desktop\/modal\/manualValue.php": {
+        "Valider": "Onaylayın",
+        "Date de début": "",
+        "Date de fin": "Son tarihi",
+        "Consommation (kWh)": "",
+        "Coût (€)": "",
+        "Commentaire": "COMMENTAIRE",
+        "Mémo": "",
+        "Gaz : 1m3 = 10.91 kWh": "",
+        "Ajout réussi": ""
+    },
+    "plugins\/pulseCounter\/desktop\/php\/panel.php": {
+        "401 - Accès non autorisé": "401 - Yetkisiz erişim",
+        "Liste objets": "Nesne listesi",
+        "Rechercher": "Arayın"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/pulseCounter.php": {
+        "401 - Accès non autorisé": "401 - Yetkisiz erişim",
+        "Gestion": "Idare",
+        "Ajouter": "Ekle",
+        "Configuration": "Ayar",
+        "Mes équipements de comptage": "",
+        "Rechercher": "Arayın",
+        "Configuration avancée": "Gelişmiş ayarlar",
+        "Sauvegarder": "Kaydet",
+        "Supprimer": "Sil",
+        "Equipement": "Cihaz",
+        "Commandes": "Komutalar",
+        "Nom de l'équipement": "Ekipman ismi",
+        "Objet parent": "Üst nesne",
+        "Aucun": "Hiçbir",
+        "Activer": "Etkinleştir",
+        "Visible": "Görülebilir",
+        "Type": "Çeşit",
+        "Electricité": "",
+        "Eau": "",
+        "Gaz": "",
+        "Instantanné": "",
+        "Consommation": "",
+        "Coût": "",
+        "Température ext": "",
+        "Ajouter au total": "",
+        "Ceci est mon energie de chauffage": "",
+        "Renseigner des valeurs": "",
+        "Renseigner": "",
+        "Nom": "İsim",
+        "Action": "Eylem"
+    },
+    "plugins\/pulseCounter\/desktop\/js\/pulseCounter.js": {
+        "Nom": "İsim",
+        "Tester": "Test et",
+        "Valeur manuelle": ""
+    },
+    "plugins\/pulseCounter\/core\/ajax\/pulseCounter.ajax.php": {
+        "401 - Accès non autorisé": "401 - Yetkisiz erişim",
+        "Equipement energie non trouvé : ": "",
+        "Date de début invalide": "",
+        "Date de fin invalide": "",
+        "Aucune méthode correspondante à : ": "Aşağıdakilere karşılık gelen bir yöntem yok:"
+    },
+    "plugins\/pulseCounter\/core\/class\/pulseCounter.class.php": {
+        "Période non trouvée : ": "",
+        "Rafraichir": "Yenile",
+        "Consommation": "",
+        "Coût": "",
+        "Instantanée": "",
+        "Temperature extérieure": "Dış hava sıcaklığı",
+        "Performance énergetique": ""
+    },
+    "info.json": {
+        "Plugin pour le comptage de l’énergie (gaz, électricité et eau). Permet de faire un calcul estimatif du DPE.": ""
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "plugins\/pulseCounter\/plugin_info\/configuration.php": {
+        "Surface habitable du logement (m²)": ""
+    },
+    "plugins\/pulseCounter\/desktop\/modal\/manualValue.php": {
+        "Valider": "検証",
+        "Date de début": "",
+        "Date de fin": "終了日",
+        "Consommation (kWh)": "",
+        "Coût (€)": "",
+        "Commentaire": "コメント",
+        "Mémo": "",
+        "Gaz : 1m3 = 10.91 kWh": "",
+        "Ajout réussi": ""
+    },
+    "plugins\/pulseCounter\/desktop\/php\/panel.php": {
+        "401 - Accès non autorisé": "401-不正アクセス",
+        "Liste objets": "リスト項目",
+        "Rechercher": "検索"
+    },
+    "plugins\/pulseCounter\/desktop\/php\/pulseCounter.php": {
+        "401 - Accès non autorisé": "401-不正アクセス",
+        "Gestion": "管理",
+        "Ajouter": "加えます",
+        "Configuration": "コンフィギュレーション",
+        "Mes équipements de comptage": "",
+        "Rechercher": "検索",
+        "Configuration avancée": "高度な構成",
+        "Sauvegarder": "セーブ",
+        "Supprimer": "取り除きます",
+        "Equipement": "設備",
+        "Commandes": "コマンド",
+        "Nom de l'équipement": "機器の名前",
+        "Objet parent": "親オブジェクト",
+        "Aucun": "何でもありません",
+        "Activer": "アクティブ",
+        "Visible": "目に見えます",
+        "Type": "タイプ",
+        "Electricité": "",
+        "Eau": "",
+        "Gaz": "",
+        "Instantanné": "",
+        "Consommation": "",
+        "Coût": "",
+        "Température ext": "",
+        "Ajouter au total": "",
+        "Ceci est mon energie de chauffage": "",
+        "Renseigner des valeurs": "",
+        "Renseigner": "",
+        "Nom": "表題",
+        "Action": "アクション"
+    },
+    "plugins\/pulseCounter\/desktop\/js\/pulseCounter.js": {
+        "Nom": "表題",
+        "Tester": "テスト",
+        "Valeur manuelle": ""
+    },
+    "plugins\/pulseCounter\/core\/ajax\/pulseCounter.ajax.php": {
+        "401 - Accès non autorisé": "401-不正アクセス",
+        "Equipement energie non trouvé : ": "",
+        "Date de début invalide": "",
+        "Date de fin invalide": "",
+        "Aucune méthode correspondante à : ": "以下に対応するメソッドはありません："
+    },
+    "plugins\/pulseCounter\/core\/class\/pulseCounter.class.php": {
+        "Période non trouvée : ": "",
+        "Rafraichir": "クール",
+        "Consommation": "",
+        "Coût": "",
+        "Instantanée": "",
+        "Temperature extérieure": "屋外の気温",
+        "Performance énergetique": ""
+    },
+    "info.json": {
+        "Plugin pour le comptage de l’énergie (gaz, électricité et eau). Permet de faire un calcul estimatif du DPE.": ""
+    }
+}

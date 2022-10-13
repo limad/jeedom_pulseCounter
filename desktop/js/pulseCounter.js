@@ -306,7 +306,7 @@ $('#bt_cmdConfigureCopyHistory').off('click').on('click', function() {
 
 $('#bt_HistlValue').on('click', function () {//bt_HistlValue
   $('#md_modal').dialog({title: "{{Valeur manuelle}}"});
-  $('#md_modal').load('index.php?v=d&plugin=pulseCounter&modal=HistlValue&id='+$('.eqLogicAttr[data-l1key=id]').value()).dialog('open');
+  $('#md_modal').load('index.php?v=d&plugin=pulseCounter&modal=setHistlValue&id='+$('.eqLogicAttr[data-l1key=id]').value()).dialog('open');
 });
 
 $('#bt_setIndex').on('click', function () {

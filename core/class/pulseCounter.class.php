@@ -69,103 +69,75 @@ class pulseCounter extends eqLogic {
 	];
 /*     * ***********************Methode static*************************** */
 /* ************************************************************************** */
+	public function testPulse() {
+    	log::add('pulseCounter', 'debug',__FUNCTION__ . '  Starting ****************');
+		$eqName = $this->getName();
+      	$eqId = $this->getId();
+    	$countType = $this->getConfiguration('countType');
+      if($countType == "instant" ){
+        	$testValue = 1;
+      }elseif($countType == "total"){
+        	$input_pulses_cmd = $this->getCmd('info', 'input_pulses');
+      		$input_pulses = $input_pulses_cmd->execCmd();
+        	$testValue = $input_pulses + 1;
+      }
+      $pulse_listener = listener::byClassAndFunction('pulseCounter', 'pulseEvent', array('pulseCounter_id' => $eqId));
+      $listener_id =  $pulse_listener->getId();        
+      $event = [
+            "test" => true,
+            "background" => false,
+            "pulseCounter_id" => $eqId,
+            "event_id" => $cmdId,
+            "value" => $testValue,
+            "datetime" => date('Y-m-d H:i:s', strtotime('now')), //"2022-08-12 13:01:10",
+            "listener_id" => $listener_id
+      ];
+      self::pulseEvent($event);
+    }  
+/* ************************************************************************** */
 	public function refresh() {
 		log::add('pulseCounter', 'debug',__FUNCTION__ . '  Starting ****************');
-		 /*
-      	$ar = [
-				"Aujourdh'hui" => "D",
-          		"Hier" => "D-1",
-          		"Heure" => "H",
-          		"derniere heure" => "H-1",
-          		"Z" => "Z",
-          		"1" => "-1",
-		];
-        foreach($ar as $date=>$arg){
-          	$value = $this->getValueForPreviousDate($arg, 'pulse');
-          	//log::add(__CLASS__, 'debug',"  ".__FUNCTION__ . " Previous : $date : ".$value);
-      	
-        }
-      	
-     
-      
-        $cmd_id = str_replace('#', '', $this->getConfiguration('pulse'));
-      	$cmd = cmd::byId($cmd_id);
-      	$lastCollectDate = $cmd->getCollectDate();//strtotime();
-      	$lastValueDate = $cmd->getValueDate();
-      	$cmd_value = $cmd->execCmd();
-        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " lastCollectDate : $lastCollectDate => $cmd_value");
-      	$_date = date('Y-m-d');
-      	$pulse_avg = round($cmd->getTemporalAvg($_date . ' 00:00:01', $_date . ' 23:59:59'), 2);
-			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . ' getTemporalAvg : '.$pulse_avg);
-      	$pulse_tendance = round($cmd->getTendance($_date . ' 00:00:01', $_date . ' 23:59:59'), 2);
-        	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . ' tendance : '.$pulse_tendance);
-      	$pulse_statistique = $cmd->getStatistique($_date . ' 00:00:01', $_date . ' 23:59:59');
-      		log::add(__CLASS__, 'debug',"	".__FUNCTION__ . ' statistique : '.json_encode($pulse_statistique));
-      	
-      	$nbPulse_cmd = $this->getCmd('info', 'pulse');
-      	$nbPulse = $nbPulse_cmd->execCmd();
-      	if($nbPulse < $cmd_value) $nbPulse_cmd->event($cmd_value, $lastValueDate);
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . ' nbPulse : '.$nbPulse);
-      	
-      
-      */
-      	$eqName = $this->getName();
-      	$indexVolCible = $this->getConfiguration('indexVolCible');
-        $pulseRatio = $this->getConfiguration('pulseRatio');
+		$eqName = $this->getName();
+      	$pulseRatio = $this->getConfiguration('pulseRatio');
         $indexPulseAdd = $this->getConfiguration('indexPulseAdd');
-        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] indexVolCible : $indexVolCible - pulseRatio: $pulseRatio - indexPulseAdd: $indexPulseAdd");
+        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] pulseRatio: $pulseRatio - indexPulseAdd: $indexPulseAdd");
           
-        $nbPulse_cmd = $this->getCmd('info', 'pulse');
-      	$old_nbPulse = $nbPulse_cmd->execCmd();
-      	$nbPulseBase_cmd = $this->getCmd('info', 'basepulse');
-      	$nbPulseBase = $nbPulseBase_cmd->execCmd();
+        $input_pulses_cmd = $this->getCmd('info', 'input_pulses');
+      	$input_pulses = $input_pulses_cmd->execCmd();
+      	$totPulses_cmd = $this->getCmd('info', 'total_pulses');
+      	$old_totPulses = $totPulses_cmd->execCmd();
       	
       
-      	$new_nbPulse = $nbPulseBase + $indexPulseAdd;//+ $indexVolCible/$pulseRatio 
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] nbPulseBase : ".$nbPulseBase);
-        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_nbPulse : ".$old_nbPulse);
-        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_nbPulse : ".$new_nbPulse);
+      	$new_totPulses = $input_pulses + $indexPulseAdd;
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] input_pulses : ".$input_pulses);
+        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_totPulses : ".$old_totPulses);
+        log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_totPulses : ".$new_totPulses);
           
-      	if($new_nbPulse == $old_nbPulse){
+      	if($new_totPulses == $old_totPulses){
              log::add(__CLASS__, 'debug',__FUNCTION__ . '  aucun changement ');
              return;
         }
-        /*elseif($new_nbPulse < $old_nbPulse){
-                $pulseAdd_date = $eqConfig['pulseAdd_date'];
-                log::add(__CLASS__, 'error',__FUNCTION__ . '  pulseAdd_date : '.$pulseAdd_date. ' oldValueDate : '. $oldValueDate);
-                if(strtotime($pulseAdd_date) > strtotime($oldValueDate)){
-                    $new_indexPulse = $indexPulseAdd + $new_nbPulse;
-                    log::add(__CLASS__, 'error',__FUNCTION__ . '  new_nbPulse set from: '.$_option['value']. ' to : '. $new_indexPulse);
-                    return;
-                }
-                else{
-                    $err_msg = "Le nouvel index d'impulsions '$new_nbPulse' est inferieur à la valeur actuelle de la commande '$old_nbPulse' ";
-                    log::add(__CLASS__, 'error',__FUNCTION__ . " Attention le nouvel index est inferieur au précedent. Corriger 'Index correcteur' ");
-                    throw new Exception(__($err_msg, __FILE__));
-                }
-
-        }
-      	*/
-      	$vol_index =  round($new_nbPulse / $pulseRatio , 2);
+        $vol_index =  round($new_totPulses / $pulseRatio , 2);
       	$conso_index = round($vol_index * $coefConv, 2);
-      
-      	if (!$test){
-          	
-          
-      		$nbPulseBase_cmd->event($new_nbPulse);
-            $nbPulse_cmd->event($new_nbPulse);
-          	$this->getCmd(null, 'vol_index')->event($vol_index);
-      		$this->getCmd(null, 'conso_index')->event($conso_index);
-      	}
-      
-      //$this->checkAndUpdateCmd($nbPulse, $value);
-      	//$nbPulse->event($value);
-		//$lastValueDate = strtotime($nbPulse->getCollectDate());
-      	//$lastCollectDate = $nbPulse->getCollectDate();//strtotime();
-      	//$lastValueDate = $nbPulse->getValueDate();//strtotime();
-      	//
       	
-	}
+      	$cmds_values = [
+          'total_pulses'=> $new_totPulses,
+          'vol_index' => $vol_index,
+          'conso_index'=> $conso_index,
+          ];
+      	foreach($cmds_values as $cmdLogId => $cmd_value){
+			$cmd = $this->getCmd(null, $cmdLogId);
+			if (!is_object($cmd) || $cmd_value === false) {
+              	continue;
+			}
+			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] set cmd:  ".$cmdLogId." to ".$cmd_value);
+			if (!$test){
+      			$cmd->event($cmd_value, $newValueDate);
+			}
+		}
+      
+      
+   	}
 
 /* ************************************************************************** */
 	public function updateInfos() {
@@ -181,27 +153,22 @@ class pulseCounter extends eqLogic {
           
         
       	if($countType == "total"){
-          	$nbPulseBase = jeedom::evaluateExpression($eqLogic->getConfiguration('pulse'));
+          	$input_pulses = jeedom::evaluateExpression($eqLogic->getConfiguration('pulse'));
         }else{
-          	$nbPulseBase_cmd = $this->getCmd('info', 'basepulse');
-      		$nbPulseBase = $nbPulseBase_cmd->execCmd();
+          	$input_pulses_cmd = $this->getCmd('info', 'input_pulses');
+      		$input_pulses = $input_pulses_cmd->execCmd();
         }
       
-      
-      
-      
-      //$nbPulse_cmd = $this->getCmd('info', 'pulse');
-      	//$old_nbPulse = $nbPulse_cmd->execCmd();
-      	$new_nbPulse = $nbPulseBase + $indexPulseAdd;
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] nbPulseBase : ".$nbPulseBase);
-        $vol_index = round($new_nbPulse / $pulseRatio , 2);
+      	//$totPulses_cmd = $this->getCmd('info', 'total_pulses');
+      	//$old_totPulses = $totPulses_cmd->execCmd();
+      	$new_totPulses = $input_pulses + $indexPulseAdd;
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] input_pulses : ".$input_pulses);
+        $vol_index = round($new_totPulses / $pulseRatio , 2);
       	$conso_index = round($vol_index * $coefConv, 2);
-          //log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_nbPulse : ".$old_nbPulse);
-        //log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_nbPulse : ".$new_nbPulse);
-          
+         
       	$cmds_values =[
-          'basepulse' => $nbPulseBase,
-          'pulse' => $new_nbPulse,
+          'input_pulses' => $input_pulses,
+          'total_pulses' => $new_totPulses,
           'vol_index' => $vol_index,
           'conso_index' => $conso_index,
         ];
@@ -223,87 +190,86 @@ class pulseCounter extends eqLogic {
 		}
       	$eqName = $eqLogic->getName();
       	log::add(__CLASS__, 'info','=> '.__FUNCTION__ . ' Start for: ['.$eqName.']  _option: '.json_encode($_option));
-      	
+      	$modeTeste ="";
+      	$test = false;
       	if (isset($_option['test'])) {
 			$test = true;
+          	$modeTeste = "test!";
 		}
       	$eqConfig = $eqLogic->getConfiguration();
       	$coefConv = floatval(jeedom::evaluateExpression($eqConfig['coef_'.$eqConfig['coefType']]));
       	$coefConv = $coefConv > 0 ? $coefConv : 1;
-        $indexVolCible = $eqConfig['indexVolCible'] ?? 0;
-      	$indexPulseAdd = $eqConfig['indexPulseAdd'] ?? 0;
-      	//$pulseUnit = $eqConfig['pulseUnit'];
+        $indexPulseAdd = $eqConfig['indexPulseAdd'] ?? 0;
       	$pulseUnitBig = $eqConfig['pulseUnitBig'];//($pulseUnit == "l") ? "m³" : (($pulseUnit == "Wh") ? "kWh" : $pulseUnit);
       	$pulseUnitSmall = $eqConfig['pulseUnitSmall'];//($pulseUnitBig == "kWh") ? "Wh" : "l";
       	$pulseRatio = $eqConfig['pulseRatio'];
       	$countType = $eqConfig['countType'];
-      	$nbPulse_cmd = $eqLogic->getCmd('info', 'pulse');
-      	$old_nbPulse = $nbPulse_cmd->execCmd();
-      	$nbPulseBase_cmd = $eqLogic->getCmd('info', 'basepulse');
-      	$old_nbPulseBase = $nbPulseBase_cmd->execCmd();
-      	$oldValueDate = ($nbPulse_cmd->getValueDate() != "") ? $nbPulse_cmd->getValueDate() : $eqLogic->getConfiguration('createtime');
+      	$totPulses_cmd = $eqLogic->getCmd('info', 'total_pulses');
+      	$old_totPulses = $totPulses_cmd->execCmd();
+      	$input_pulses_cmd = $eqLogic->getCmd('info', 'input_pulses');
+      	$old_input_pulses = $input_pulses_cmd->execCmd();
+      	$oldValueDate = ($totPulses_cmd->getValueDate() != "") ? $input_pulses_cmd->getValueDate() : $eqLogic->getConfiguration('createtime');
       
       	if($countType == "instant"){
           	if($_option['value'] == null){
                 log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] Nouvelle valeur null => aucun changement : ".$_option['value']);
                 return;
             }
-          	$new_nbPulseBase = $old_nbPulseBase + 1;//
+          	$new_input_pulses = $old_input_pulses + 1;//
         }
       	else {//$countType == "total"
-          	$new_nbPulseBase = $_option['value'];
-      		if (!$test) $new_nbPulseBase = jeedom::evaluateExpression($eqLogic->getConfiguration('pulse'));//
+          	$new_input_pulses = $_option['value'];
+      		if (!$test) $new_input_pulses = jeedom::evaluateExpression($eqLogic->getConfiguration('pulse'));
         }
       	$newValueDate = $_option['datetime'];
-      	$new_nbPulse = $new_nbPulseBase + $indexPulseAdd;//+ $indexVolCible/$pulseRatio 
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] pulseRatio: $pulseRatio - indexPulseAdd: $indexPulseAdd");
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_nbPulseBase : $old_nbPulseBase at $oldValueDate");
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_nbPulseBase : $new_nbPulseBase at $newValueDate");
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_nbPulse : $old_nbPulse");
-      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_nbPulse : $new_nbPulse at $newValueDate");
+      	$new_totPulses = $new_input_pulses + $indexPulseAdd;
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] countType: $countType - pulseRatio: $pulseRatio - indexPulseAdd: $indexPulseAdd");
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_input_pulses : $old_input_pulses at $oldValueDate");
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] new_input_pulses : $new_input_pulses at $newValueDate");
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] old_totPulses : $old_totPulses");
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] * new_totPulses : $new_totPulses at $newValueDate");
       	
-      	if($new_nbPulse == $old_nbPulse){
-                log::add(__CLASS__, 'debug',__FUNCTION__ . '  aucun changement ');
-                return;
+      	if($new_totPulses == $old_totPulses){
+			log::add(__CLASS__, 'debug',__FUNCTION__ . '  aucun changement ');
+			return;
 		}
-		elseif($new_nbPulse < $old_nbPulse){
+		elseif($new_totPulses < $old_totPulses){
           	$pulseAdd_date = $eqConfig['pulseAdd_date'];
           	log::add(__CLASS__, 'error',"	".__FUNCTION__ . " [$eqName] pulseAdd_date : $pulseAdd_date -- oldValueDate : $oldValueDate");
           	if(strtotime($pulseAdd_date) > strtotime($oldValueDate)){
-              	$new_indexPulse = $indexPulseAdd + $new_nbPulse;//$indexVolCible/$pulseRatio
-              	log::add(__CLASS__, 'error',"	".__FUNCTION__ . " [$eqName] new_nbPulse set from: ".$_option['value']. " to : . $new_indexPulse");
+              	$new_indexPulse = $indexPulseAdd + $new_totPulses;
+              	log::add(__CLASS__, 'error',"	".__FUNCTION__ . " [$eqName] new_totPulses set from: ".$_option['value']. " to : . $new_indexPulse");
 				
           		return;
             }else{
-              	$err_msg =  " [$eqName] Le nouvel index d'impulsions '$new_nbPulse' est inferieur à la valeur actuelle de la commande '$old_nbPulse'"
-                		." Corriger 'Index correcteur'";
+              	$err_msg =  " [$eqName] Le nouvel index d'impulsions '$new_totPulses' est inferieur à la valeur actuelle de la commande '$old_totPulses'" ." Corriger 'Index correcteur'";
               	log::add(__CLASS__, 'error',"	".__FUNCTION__ ." ". $err_msg);
 				throw new Exception(__($err_msg, __FILE__));
             }
 		}
       	if (!$test){
-      		$nbPulseBase_cmd->event($new_nbPulseBase, $_option['datetime']);
-            $nbPulse_cmd->event($new_nbPulse, $_option['datetime']);
+      		$input_pulses_cmd->event($new_input_pulses, $_option['datetime']);
+            $totPulses_cmd->event($new_totPulses, $_option['datetime']);
       	}
-      	if ($old_nbPulse == ""){
+      	if ($old_totPulses == ""){
       		return;
         }
       	$consoTimeLength_min = round((strtotime($newValueDate) - strtotime($oldValueDate))/60, 2);
-      	$diffPulse = $new_nbPulse - $old_nbPulse;
-      	$vol_inst = $diffPulse / $pulseRatio * 1000;
-      	$conso_inst = round($vol_inst * $coefConv, 2);/// $pulseRatio
+      	$diffPulse = $new_totPulses - $old_totPulses;
+      	$vol_inst = round($diffPulse * 1000/ $pulseRatio );
+      	$conso_inst = round(($diffPulse * 1000 / $pulseRatio) * $coefConv , 2);/// $pulseRatio
       	$debit = round($vol_inst/$consoTimeLength_min*60, 2);
-      	$puiss = round($debit * $coefConv, 2);;
+      	$puiss = round($vol_inst/$consoTimeLength_min*60 * $coefConv, 2);;
       	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] vol_inst : $vol_inst $pulseUnitSmall soit $conso_inst Wh");
       	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] consoTimeLength : $consoTimeLength_min minutes");
       	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] debit : $debit $pulseUnitSmall/heure => puiss : $puiss Wh/heure" );
       	
-      	$vol_index =  round($new_nbPulse / $pulseRatio , 2);
+      	$vol_index =  round($new_totPulses / $pulseRatio , 2);
       	$conso_index = round($vol_index * $coefConv, 2);
       	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] index vol: $vol_index $pulseUnitBig => conso: $conso_index kWh coef: ".$coefConv );
-		$pulse_thishour = $eqLogic->getValueForPreviousDate('H', 'pulse');
-      
-        $vol_heure = round(($new_nbPulse - $pulse_thishour) / $pulseRatio * 1000, 2);
+		$totPulses_thishour = $eqLogic->getValueForPreviousDate('H', 'total_pulses');
+      	$vol_heure = round(($new_totPulses - $totPulses_thishour) / $pulseRatio * 1000, 2);
+      	
       	$conso_heure =  round($vol_heure * $coefConv, 2); 
       	$cmds_values = [
 				"vol_inst"		=> $vol_inst, //"Conso Horaire"
@@ -322,7 +288,7 @@ class pulseCounter extends eqLogic {
 			if (!is_object($cmd) || $cmd_value === false  || $cmd_value < 0) {
               	continue;
 			}
-			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " $test [$eqName] set cmd:  ".$cmdLogId." to ".$cmd_value);
+			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . "$modeTeste [$eqName] set cmd:  ".$cmdLogId." to ".$cmd_value);
 			if (!$test){
       			$cmd->event($cmd_value, $newValueDate);
 			}
@@ -340,49 +306,61 @@ class pulseCounter extends eqLogic {
       	}
       	$cmdsData = [];
         foreach ($eqLogics as $eqLogic) {
+          	$eqName = $eqLogic->getName();
           	$eqConfig = $eqLogic->getConfiguration();
             $coefConv = floatval(jeedom::evaluateExpression($eqConfig['coef_'.$eqConfig['coefType']]));
       		$coefConv = $coefConv > 0 ? $coefConv : 1;
             $cmdsData['coef_conv'] = $coefConv;
           	$cmd_coefConv = $eqLogic->getCmd(null, 'coef_conv');
           	
-          	log::add(__CLASS__, 'debug',''.__FUNCTION__ . ' * ['.$eqLogic->getName().'] * coefConv '.$coefConv);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] * coefConv ".$coefConv);
             $pulseRatio = $eqConfig['pulseRatio'];
       		
-          	$cmd_Pulse = $eqLogic->getCmd(null, "pulse");
-          	$pulse_now = $cmd_Pulse->execCmd();
+          	$cmd_totPulses = $eqLogic->getCmd(null, 'total_pulses');
+          	$totPulses_now = $cmd_totPulses->execCmd();
           	
-          	if ($pulse_now == ""){
+          	if ($totPulses_now == ""){
                 return;
             }
           
-          	$pulse_thishour = $eqLogic->getValueForPreviousDate('H', "pulse");
-          	$pulse_lasthour = $eqLogic->getValueForPreviousDate('H-1', "pulse");
-          	$pulse_thisday = $eqLogic->getValueForPreviousDate('D', "pulse");
-          	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . "			pulse_now :" . $pulse_now);
-          	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . " getValueForPreviousDate D :" .$pulse_thisday);
-          	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . " getValueForPreviousDate H :" .$pulse_thishour);
-          	log::add(__CLASS__, 'debug','	'.__FUNCTION__ . " getValueForPreviousDate H-1 :" .$pulse_lasthour);
+          	$totPulses_thishour = $eqLogic->getValueForPreviousDate('H', 'total_pulses');
+          	$totPulses_lasthour = $eqLogic->getValueForPreviousDate('H-1', 'total_pulses');
+          	$totPulses_thisday = $eqLogic->getValueForPreviousDate('D', 'total_pulses');
+          
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] pulse_now :" . $totPulses_now);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] getValueForPreviousDate D :" .$totPulses_thisday);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] getValueForPreviousDate H :" .$totPulses_thishour);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] getValueForPreviousDate H-1 :" .$totPulses_lasthour);
           	
-          	$cmd_PulseDate = ($cmd_Pulse->getValueDate() != "") ? $cmd_Pulse->getValueDate() : $eqLogic->getConfiguration('createtime');
-           	if($cmd_PulseDate < date('Y-m-d H:i', strtotime('-12 hours')) ){
-              	log::add(__CLASS__, 'warning','	'.__FUNCTION__ . "  L'index ".$eqLogic->getName()." n'a pas evoluer depuis le : ".$cmd_PulseDate);
+          	$cmd_totPulsesDate = ($cmd_totPulses->getValueDate() != "") ? $cmd_totPulses->getValueDate() : $eqLogic->getConfiguration('createtime');
+           	if($cmd_totPulsesDate < date('Y-m-d H:i', strtotime('-12 hours')) ){
+              	log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] L'index n'a pas evoluer depuis le : ".$cmd_totPulsesDate);
             }
           	
-          	if($cmd_Pulse->getValueDate() < date('Y-m-d H:00:00') ){
+          	if($cmd_totPulses->getValueDate() < date('Y-m-d H:00:00') ){
               	
             }
           	$cmdsData['vol_heure'] = 0;
             $cmdsData['conso_heure'] = 0;
           
-          
-          
-            $cmdsData['vol_heure_last'] = round(($pulse_thishour - $pulse_lasthour) / $pulseRatio * 1000, 2);
-          	$cmdsData['conso_heure_last'] = round($cmdsData['vol_heure_last'] * $coefConv, 2);
-          	if($pulse_thisday != ""){
-              	$cmdsData['vol_jour'] = round(($pulse_now - $pulse_thisday) / $pulseRatio * 1000, 2);
-          		$cmdsData['conso_jour'] = round($cmdsData['vol_jour'] * $coefConv, 2);
+          if($totPulses_thisday != ""){
+              	$cmdsData['vol_jour'] = round(($totPulses_now - $totPulses_thisday) / $pulseRatio * 1000, 2);
+          		$cmdsData['conso_jour'] = round(($totPulses_now - $totPulses_thisday) / $pulseRatio * 1000 * $coefConv, 2);
           	}
+          
+            $cmdsData['vol_heure_last'] = round(($totPulses_thishour - $totPulses_lasthour) / $pulseRatio * 1000, 2);
+          	$cmdsData['conso_heure_last'] = round(($totPulses_thishour - $totPulses_lasthour) / $pulseRatio * 1000 * $coefConv, 2);
+          	
+          	
+          /*********************/
+          	$conso_jour = round($eqLogic->getConsoFromIndex('conso_index', date('Y-m-d 00:00:00')) * 1000, 2);
+          $conso_jour = round($eqLogic->getConsoFromIndex('total_pulses', date('Y-m-d 00:00:00')) / $pulseRatio * 1000 * $coefConv, 2);
+          
+          	if($conso_jour != $cmdsData['conso_jour']){
+              log::add(__CLASS__, 'error',"	".__FUNCTION__ . " [$eqName] conso_jour !! $conso_jour //". $cmdsData['conso_jour'] );
+            }else log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] conso_jour == : $conso_jour");
+          
+          
           	foreach($cmdsData as $cmdLogId => $cmd_value){
               	$valueDate="";
                 if ($cmdLogId == "vol_heure_last") {
@@ -403,13 +381,13 @@ class pulseCounter extends eqLogic {
               	if (!is_object($cmd) || $cmd_value === false  || $cmd_value < 0) {
                     continue;
                 }
-                log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd:  '.$cmdLogId.' to '.$cmd_value .' at: '.$valueDate);
+                log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] set cmd:  $cmdLogId to $cmd_value at $valueDate");
               	$cmd->event(round($cmd_value, 2), $valueDate);
 			
 			}
-			log::add(__CLASS__, 'debug','	'.__FUNCTION__ . '  cmdValue '.json_encode($cmdsData));
+			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] cmdValue ".json_encode($cmdsData));
     	}
-      	log::add(__CLASS__, 'debug',''.__FUNCTION__ . ' ['.$eqLogic->getName().'] end ');
+      	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] end ");
             
     }
 /* ************************************************************************** */
@@ -423,58 +401,59 @@ class pulseCounter extends eqLogic {
       	$cmdsData = [];
         foreach ($eqLogics as $eqLogic) {
           	if(strtotime($eqLogic->getConfiguration('createtime')) > strtotime('-1 day')){
-                log::add(__CLASS__, 'info','  '.__FUNCTION__ . " rien à faire aujourd'hui");
+                log::add(__CLASS__, 'info',"	".__FUNCTION__ . " [$eqName] rien à faire aujourd'hui");
                 return;
             }
+          	$eqName = $eqLogic->getName();
+          	
           	$eqConfig = $eqLogic->getConfiguration();
             $coefConv = floatval(jeedom::evaluateExpression($eqConfig['coef_'.$eqConfig['coefType']]));
           	$coefConv = $coefConv > 0 ? $coefConv : 1;
-            log::add(__CLASS__, 'debug','  '.__FUNCTION__ . ' '.$eqLogic->getName().'  coefConv '.$coefConv);
-            //$indexVolCible = $eqConfig['indexAdd'];
+            log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] coefConv $coefConv");
             $pulseRatio = $eqConfig['pulseRatio'];
       
-          	$cmdLogId = 'pulse';
-          	$cmd_Pulse = $eqLogic->getCmd(null, $cmdLogId);
-          	//$cmd_id = $cmd_Pulse->getId();
-          	$pulse_now = $cmd_Pulse->execCmd();
-          	if ($pulse_now == ""){
+          	$cmdLogId = 'total_pulses';
+          	$cmd_totPulses = $eqLogic->getCmd(null, $cmdLogId);
+          	//$cmd_id = $cmd_totPulses->getId();
+          	$totPulses_now = $cmd_totPulses->execCmd();
+          	if ($totPulses_now == ""){
                 return;
             }
-          	$cmdsData['now'] = $pulse_now;
+          	$cmdsData['now'] = $totPulses_now;
           	
-          	$cmd_PulseDate = ($cmd_Pulse->getValueDate() != "") ? $cmd_Pulse->getValueDate() : $eqLogic->getConfiguration('createtime');
+          	$cmd_totPulsesDate = ($cmd_totPulses->getValueDate() != "") ? $cmd_totPulses->getValueDate() : $eqLogic->getConfiguration('createtime');
            	
-          	if($cmd_PulseDate < date('Y-m-d 00:00:00') ){
+          	if($cmd_totPulsesDate < date('Y-m-d 00:00:00') ){
               	$cmdsData['vol_jour'] = 0;
             	$cmdsData['conso_jour'] = 0;
             }
           
-          	if($cmd_PulseDate < date('Y-m-d H:i', strtotime('-24 hours')) ){
-              	log::add(__CLASS__, 'warning','  '.__FUNCTION__ . "  L'index ".$eqLogic->getName()." n'a pas evoluer depuis le : ".$cmd_PulseDate);
+          	if($cmd_totPulsesDate < date('Y-m-d H:i', strtotime('-24 hours')) ){
+              	log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] n'a pas evoluer depuis le : ".$cmd_totPulsesDate);
             }
           	
-          	$pulse_today = $eqLogic->getValueForPreviousDate('D', $cmdLogId);
-          	$pulse_yesterday = $eqLogic->getValueForPreviousDate('D-1', $cmdLogId);
-          	
-          	if($pulse_yesterday != ""){
-              	$cmdsData['vol_hier'] = $pulse_yesterday ? ($pulse_today - $pulse_yesterday) * 1000 / $pulseRatio: false;
-            	$cmdsData['conso_hier'] = $conso_jour_last = $pulse_yesterday ? round($cmdsData['vol_hier'] * $coefConv, 2): false;
+          	$totPulses_today = $eqLogic->getValueForPreviousDate('D', $cmdLogId);
+          	$totPulses_yesterday = $eqLogic->getValueForPreviousDate('D-1', $cmdLogId);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] totPulses_today: $totPulses_today - totPulses_yesterday: $totPulses_yesterday");
+          	if($totPulses_yesterday != ""){
+              	$cmdsData['vol_hier'] = $totPulses_yesterday ? ($totPulses_today - $totPulses_yesterday) * 1000 / $pulseRatio: false;
+            	$cmdsData['conso_hier'] = $conso_jour_last = $totPulses_yesterday ? round($cmdsData['vol_hier'] * $coefConv, 2): false;
               	$cmdsData['vol_jour_last'] = round($cmdsData['vol_hier'],2);
               	$cmdsData['conso_jour_last'] = round($cmdsData['conso_hier'],2);
               
             }
           	
-          	$pulse_week = $eqLogic->getValueForPreviousDate('W', $cmdLogId);
-          	log::add(__CLASS__, 'debug','  '.__FUNCTION__ . ' '.$eqLogic->getName().'  pulse_week '.$pulse_week);
-          	$cmdsData['vol_sem'] = $pulse_week ? round(($pulse_now - $pulse_week) / $pulseRatio, 2): false;
-          	$cmdsData['conso_sem'] = $pulse_week ? round($cmdsData['vol_sem'] * $coefConv, 2): false;
+          	$totPulses_week = $eqLogic->getValueForPreviousDate('W', $cmdLogId);
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] pulse_week $totPulses_week");
+          	$cmdsData['vol_sem'] = $totPulses_week ? round(($totPulses_now - $totPulses_week) / $pulseRatio, 2): false;
+          	$cmdsData['conso_sem'] = $totPulses_week ? round($cmdsData['vol_sem'] * $coefConv, 2): false;
             
-          	$pulse_month = $eqLogic->getValueForPreviousDate('M', $cmdLogId);
-          	if($pulse_month != ""){
-              	$cmdsData['vol_mois'] = $pulse_month ? round(($pulse_now - $pulse_month) / $pulseRatio, 2): false;
-              	$cmdsData['conso_mois'] = $pulse_month ? round($cmdsData['vol_mois'] * $coefConv, 2): false;
+          	$totPulses_month = $eqLogic->getValueForPreviousDate('M', $cmdLogId);
+          	if($totPulses_month != ""){
+              	$cmdsData['vol_mois'] = $totPulses_month ? round(($totPulses_now - $totPulses_month) / $pulseRatio, 2): false;
+              	$cmdsData['conso_mois'] = $totPulses_month ? round($cmdsData['vol_mois'] * $coefConv, 2): false;
             }
-          	log::add(__CLASS__, 'debug','  '.__FUNCTION__ . ' '.$eqLogic->getName().'  cmdValue '.json_encode($cmdsData));
+          	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] cmdsValue: ".json_encode($cmdsData));
           
           	foreach($cmdsData as $cmdLogId => $cmd_value){
               	$valueDate="";
@@ -496,7 +475,7 @@ class pulseCounter extends eqLogic {
               	if (!is_object($cmd) || $cmd_value === false  || $cmd_value < 0) {
                     continue;
                 }
-                log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  set cmd:  '.$cmdLogId.' to '.$cmd_value);
+                log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] set cmd: $cmdLogId to $cmd_value");
               	$cmd->event(round($cmd_value, 2), $valueDate );
             }
         }
@@ -515,10 +494,10 @@ class pulseCounter extends eqLogic {
             ////$end = date('Y-m-d H:59:59', strtotime('now -1 hour'));
         } 
 		else if($_period== 'D'){
-        $date = date('Y-m-d H:00:00', strtotime('midnight'));
+        $date = date('Y-m-d 00:00:00');
 		} 
 		else if($_period== 'D-1'){
-        $date = date('Y-m-d H:i:s', strtotime('-1 day midnight'));
+        $date = date('Y-m-d H:i:s', strtotime('-1 day'));
       } 
 		else if($_period== 'W'){
             $date = date('Y-m-d H:i:s', strtotime('monday this week midnight'));
@@ -549,9 +528,11 @@ class pulseCounter extends eqLogic {
 		else{
           return 0;
       }
-		$history = history::byCmdIdAtDatetime($cmd_id, $date);
+		/*$history = history::byCmdIdAtDatetime($cmd_id, $date);
 		if (!is_object($history)) return false;
 		$return = round($history->getValue(), 2);
+        */
+      	$return = $this->_rqstHist($cmd_id, $date);
        	return $return;
 		
 	}
@@ -866,17 +847,17 @@ class pulseCounter extends eqLogic {
 
 /* ************************************************************************** */
 	public function removeHistoryData($_cmdLogId, $_start, $_end) {
-		log::add(__CLASS__, 'debug','  '.__FUNCTION__ . '  Starting **************** '.$this->getName(). " $_cmdLogId");
-      	$cmd = $this->getCmd('info', $_cmdLogId);
+		$cmd = $this->getCmd('info', $_cmdLogId);
       	if(is_object($cmd)){
 			$cmd_id = $cmd->getId();
-			log::add(__CLASS__, 'debug','  '.__FUNCTION__ . " cmd_id $cmd_id du $_start au $_end");
+			//log::add(__CLASS__, 'debug',"	".__FUNCTION__ ." cmd_id $cmd_id du $_start au $_end");
 			$historys = history::all($cmd_id, $_start, $_end);
           	foreach ($historys as $history) {
               	$history->remove();
             }
-		}else log::add(__CLASS__, 'warning','	'.__FUNCTION__ . " cmd $_cmdLogId Not exist");
-		
+		}else {
+          //log::add(__CLASS__, 'warning',"	".__FUNCTION__ ." cmd $_cmdLogId Not exist");
+    	}
 	}
 
 	
@@ -885,7 +866,7 @@ class pulseCounter extends eqLogic {
 /* ************************************************************************** */
 	public function preSave() {
       	$eqType = $this->getConfiguration('type', "");
-        log::add(__CLASS__, 'info',__FUNCTION__ . ' start '.$eqType);
+        log::add(__CLASS__, 'info',"	".__FUNCTION__ . " [$eqName] start $eqType");
       	$this->setCategory('energy', 1);
       	
       	if($this->getConfiguration('pulseWeight') == ''){
@@ -897,7 +878,7 @@ class pulseCounter extends eqLogic {
         	$this->setConfiguration('pulseUnit', $pulseUnit);
         }
 		$pulseUnitBig = ($pulseUnit == "l") ? "m³" : ($pulseUnit == "Wh" ? "kWh" : $pulseUnit);
-      	log::add(__CLASS__, 'warning',__FUNCTION__ . ' pulseUnit '.$pulseUnit. " $pulseUnitBig");
+      	log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] pulseUnit $pulseUnit $pulseUnitBig");
 		$pulseUnitSmall = ($pulseUnitBig == "kWh") ? "Wh" : "l";
 		$this->setConfiguration('pulseUnitBig', $pulseUnitBig);
 		$this->setConfiguration('pulseUnitSmall', $pulseUnitSmall);
@@ -908,31 +889,33 @@ class pulseCounter extends eqLogic {
 			$pulseUnit = $this->getConfiguration('pulseUnit', 'l');//$eqConfig[''];
 			$pulseWeight_conv = ($pulseUnit == 'l' || $pulseUnit == 'Wh') ? 1000 : 1;
 			$pulseRatio = $pulseWeight_conv/$this->getConfiguration('pulseWeight');//$this->getConfiguration('pulseWeight')/$pulseWeight_conv;
-			log::add(__CLASS__, 'debug',__FUNCTION__ . ' pulseRatio: '.$pulseRatio);
+			log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName]pulseRatio: $pulseRatio");
 			$this->setConfiguration('pulseRatio', $pulseRatio);
 				
           	if($this->getConfiguration('cmdsMaked') == true){  
-				$basepulse_cmd = $this->getCmd(null, 'basepulse');
-				$basepulse_cmdVal = $basepulse_cmd->execCmd();
-				if(!is_numeric($basepulse_cmdVal) || $basepulse_cmdVal < 0){
-					$basepulse = jeedom::evaluateExpression($this->getConfiguration('pulse', 0));
-					$basepulse = (!is_numeric($basepulse) || $basepulse < 0) ? 0 : intval($basepulse);
-					$basepulse_cmd->event($basepulse);
-				}else $basepulse = $basepulse_cmdVal;
+				$input_pulses_cmd = $this->getCmd(null, 'input_pulses');
+				$input_pulses_cmdVal = $input_pulses_cmd->execCmd();
+				if (!is_numeric($input_pulses_cmdVal)) {
+                  	$countType = $this->getConfiguration('countType');
+              		$input_pulses = ($countType == 'total') ? jeedom::evaluateExpression($this->getConfiguration('pulse')) : 0;
+                  	log::add(__CLASS__, 'debug', __FUNCTION__ . ' set input_pulses to '.$input_pulses);
+            		$input_pulses_cmd->event($input_pulses);
+            	}else $input_pulses = $input_pulses_cmdVal;
+              
               
                 
               	$indexVolCible = $this->getConfiguration('indexVolCible', '');
                 if($indexVolCible != ''){
-                  	log::add(__CLASS__, 'debug',__FUNCTION__ . " ** start conversion indexVolCible ($indexVolCible) to indexPulseAdd... ");
+                  	log::add(__CLASS__, 'debug',"	".__FUNCTION__ . " [$eqName] ** start conversion indexVolCible ($indexVolCible) to indexPulseAdd... ");
                     $old_indexPulseAdd = $this->getConfiguration('indexPulseAdd', 0);
                     $VolToPulseAdd = $indexVolCible * $pulseRatio;
-                    log::add(__CLASS__, 'warning',__FUNCTION__ . " VolToPulseAdd: $VolToPulseAdd");
+                    log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] VolToPulseAdd: $VolToPulseAdd");
 
-                  	$indexPulseAdd = $VolToPulseAdd - $basepulse;
+                  	$indexPulseAdd = $VolToPulseAdd - $input_pulses;
                     $this->setConfiguration('indexPulseAdd', $indexPulseAdd);
                   	$this->setConfiguration('indexVolCible', '');
                   
-                    log::add(__CLASS__, 'warning',__FUNCTION__ . " basepulse : $basepulse -- indexPulseAdd from : $old_indexPulseAdd to $indexPulseAdd");
+                    log::add(__CLASS__, 'warning',"	".__FUNCTION__ . " [$eqName] input_pulses : $input_pulses -- indexPulseAdd from : $old_indexPulseAdd to $indexPulseAdd");
 
                  }
               	$this->updateInfos();
@@ -952,11 +935,13 @@ class pulseCounter extends eqLogic {
   /* ************************************************************************** */
 	public function postSave() {
       	$eqType = $this->getConfiguration('type', "");
+      	$eqName = $this->getName();
+          	
       	if($eqType == "") return;
       	$eqId = intval($this->getId());
         log::add(__CLASS__, 'debug',__FUNCTION__ . '  Starting ****************');
       	
-      	$pulseConfig = $this->getConfiguration('pulse','') ;    
+      	$pulseConfig = $this->getConfiguration('pulse','') ;   //pulse etConfiguration('pulse'
 		if($pulseConfig != ''){
             log::add(__CLASS__, 'debug', __FUNCTION__ . '  pulse cmd CONFIG Avalaible ... check listener');
           	preg_match_all('/#(?<cmds_id>[0-9]*)#/mi', $this->getConfiguration('pulse'), $pulse_matches);      
@@ -971,8 +956,7 @@ class pulseCounter extends eqLogic {
                     }
             }
           	if(count($pulse_matches['cmds_id']) > 1){
-              	//$this->setConfiguration('pulse', $pulse_target);
-                log::add(__CLASS__, 'warning', __FUNCTION__ . '  Attention une seule commande <pulse> est possible choix : '.$cmd->getHumanName());
+              	log::add(__CLASS__, 'warning', __FUNCTION__ . '  Attention une seule commande <pulse> est possible choix : '.$cmd->getHumanName());
             }
           
           	if($target_cmd_id){
@@ -989,28 +973,13 @@ class pulseCounter extends eqLogic {
               	$pulse_listener->addEvent($target_cmd_id);
 				$pulse_listener->save();
             }
-          	$nbPulseBase_cmd = $this->getCmd('info', 'basepulse');
-      		if (!is_object($nbPulseBase_cmd)){
-              	log::add(__CLASS__, 'warning', __FUNCTION__ . ' <basepulse>  Not Exist');
-            }
-          	else{
-              	$nbPulseBase_cmdVal = $nbPulseBase_cmd->execCmd();
-          		if (!is_numeric($nbPulseBase_cmdVal) || $nbPulseBase_cmdVal < 0 ) {
-                  	$countType = $this->getConfiguration('countType');
-              		$nbPulseBase = ($countType == 'total') ? round(jeedom::evaluateExpression($this->getConfiguration('pulse'))) : 0;
-                  	log::add(__CLASS__, 'debug', __FUNCTION__ . ' set basepulse to '.$nbPulseBase);
-            		$this->checkAndUpdateCmd($nbPulseBase_cmd, $nbPulseBase);
-            	}
-            } 
-              
         }
 		else{
           $err_msg = "Pas possible de sauvegarder l'équipement sans renseigner une commande 'Compteur impulsions'! c'est compris ?";
           throw new Exception(__($err_msg, __FILE__));
         }
-      	
-      	
     }
+
   /* ************************************************************************** */
 	public function postRemove() {
 		log::add(__CLASS__, 'debug',__FUNCTION__ . '  Starting **************** '.$this->getName());
@@ -1019,7 +988,101 @@ class pulseCounter extends eqLogic {
 			$listener->remove();
 		}
     }
- 
+
+  /* ************************************************************************** */
+	public function getConsoFromIndex($_cmd_id, $_startTime, $_endTime=null) {
+        if($_endTime == null){
+          	$_endTime = date('Y-m-d H:i:s');
+        }
+  		$val_start = $this->_rqstHist($_cmd_id, $_startTime);
+        $val_end = $this->_rqstHist($_cmd_id, $_endTime);
+      	$return = null;
+        if($val_start != "" && $val_end > $val_start){
+          	$return = round($val_end - $val_start, 2);
+    	}
+        log::add(__CLASS__, 'info','	'.__FUNCTION__ . " $_cmd_id	val_start: $val_start($_startTime) -- val_end: $val_end( $_endTime ) => $return");
+        return $return;
+    }
+
+  /* ************************************************************************** */
+	public function getConsoFromInst($_cmd_id, $_startTime, $_endTime) {
+		$return = $this->_rqstHist($_cmd_id, $_startTime, $_endTime, 'sum');
+		return $return;
+	}
+  
+  /* ************************************************************************** */
+	public function _rqstHist($_cmd_id, $_startTime, $_endTime = null, $_groupingType = null) {
+  		$values = array(
+			'startTime' => $_startTime,
+			'endTime' => $_endTime,
+		);
+  		
+  
+  		if(is_numeric($_cmd_id)){
+          	$values['cmd_id'] = $_cmd_id;
+        }elseif(is_string($_cmd_id)){
+          	$eqLogic = pulseCounter::byId($this->getId());
+          	if( is_object( $eqLogic->getCmd(null, $_cmd_id) ) ){
+          		$values['cmd_id'] = $eqLogic->getCmd(null, $_cmd_id)->getId();
+            }
+        }
+  		else throw new Exception(__('Unknown cmd : ', __FILE__) . $_cmd_id);
+  		 
+  		$sql = 'SELECT CAST(value AS DECIMAL(12,2)) as result ';
+  		try{
+			if($_endTime != null){
+				if($_groupingType != null){
+					if($_groupingType == 'diff'){
+						$sql = 'SELECT MAX(CAST(value as DECIMAL(12,2))) - MIN(CAST(value as DECIMAL(12,2))) as result ';
+					}
+					else{	$sql = 'SELECT '.strtoupper($_groupingType).'(CAST(value AS DECIMAL(12,2))) as result ';
+					}
+					$values['groupingType'] = $_groupingType;
+				}	
+				$sql .= 'FROM (
+                          SELECT *
+                          FROM history
+                          WHERE cmd_id=:cmd_id
+                          AND `datetime`>=:startTime
+                          AND `datetime`<=:endTime
+                          UNION ALL
+                          SELECT *
+                          FROM historyArch
+                          WHERE cmd_id=:cmd_id
+                          AND `datetime`>=:startTime
+                          AND `datetime`<=:endTime
+                      ) as dt ORDER BY datetime ASC';
+			}
+          	else{
+				if($_groupingType != null){
+					return 'Error:: endTime is mandatory for groupingType';
+				}
+                $sql .= 'FROM (
+                          SELECT *
+                          FROM history
+                          WHERE cmd_id=:cmd_id
+                          AND `datetime`<=:startTime
+                          UNION ALL
+                          SELECT *
+                          FROM historyArch
+                          WHERE cmd_id=:cmd_id
+                          AND `datetime`<=:startTime
+                      ) as dt ORDER BY `datetime` DESC LIMIT 1';//ORDER BY `datetime` DESC LIMIT 1
+            }
+          	$result = DB::Prepare($sql, $values, DB::FETCH_TYPE_ROW);
+          	foreach ($result as $key => &$value) {
+                if ($value === '') {
+                    $value = 0;
+                }
+                $result[$key] = round($value, 2);
+            }
+          	$result['data'] = $values;
+		}catch (Exception $ex) {
+			log::add(__CLASS__, 'error', ' Erreur '.__FUNCTION__ .' : '.$ex);
+		}
+		return $result['result'];
+}
+
   	
 	/*     * **********************Getteur Setteur*************************** */
 }

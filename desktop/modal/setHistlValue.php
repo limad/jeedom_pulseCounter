@@ -20,7 +20,7 @@ if (!isConnect('admin')) {
 }
 sendVarToJs('eqLogic_id', init('id'));
 $pulseCounter = pulseCounter::byId(init('id'));
-$pulse_cmd = $pulseCounter->getCmd(null, 'pulse');
+$pulse_cmd = $pulseCounter->getCmd(null, 'total_pulses');
 $pulse_cmd->execCmd();
 $lastValue = $pulse_cmd->getCollectDate();//date('Y-m-d', strtotime($pulse_cmd->getCollectDate()));
 log::add('pulseCounter', 'debug',__FUNCTION__ . ' lastValue: '. $lastValue );
